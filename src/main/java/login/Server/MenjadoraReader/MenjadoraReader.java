@@ -1,5 +1,8 @@
 package login.Server.MenjadoraReader;
 
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import login.Server.DatabaseManager;
 
 public class MenjadoraReader {
@@ -27,36 +30,64 @@ public class MenjadoraReader {
     }
     public void setSensorPlat(double sensorPlat, DatabaseManager databaseManager) {
         this.sensorPlat = sensorPlat;
-        databaseManager.updateValueMaquina("sensorPlat", EoD, String.valueOf(sensorPlat));
+        try {
+            databaseManager.updateValueMaquina("sensorPlat", EoD, String.valueOf(sensorPlat));
+        } catch (SQLException ex) {
+            Logger.getLogger(MenjadoraReader.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     public void setGramsAcumulatAvui(double gramsAcumulatAvui, DatabaseManager databaseManager) {
         this.gramsAcumulatAvui = gramsAcumulatAvui;
-        databaseManager.updateValueMaquina("gramsAcumulatAvui", EoD, String.valueOf(gramsAcumulatAvui));
+        try {
+            databaseManager.updateValueMaquina("gramsAcumulatAvui", EoD, String.valueOf(gramsAcumulatAvui));
+        } catch (SQLException ex) {
+            Logger.getLogger(MenjadoraReader.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public void setRaccionsAcumuladesAvui(double raccionsAcumuladesAvui, DatabaseManager databaseManager) {
         this.raccionsAcumuladesAvui = raccionsAcumuladesAvui;
-        databaseManager.updateValueMaquina("raccionsAcumuladesAvui", EoD, String.valueOf(raccionsAcumuladesAvui));
+        try {
+            databaseManager.updateValueMaquina("raccionsAcumuladesAvui", EoD, String.valueOf(raccionsAcumuladesAvui));
+        } catch (SQLException ex) {
+            Logger.getLogger(MenjadoraReader.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public void setGramsRaccio(double gramsRaccio, DatabaseManager databaseManager) {
         this.gramsRaccio = gramsRaccio;
-        databaseManager.updateValueMaquina("gramsRaccio", EoD, String.valueOf(gramsRaccio));
+        try {
+            databaseManager.updateValueMaquina("gramsRaccio", EoD, String.valueOf(gramsRaccio));
+        } catch (SQLException ex) {
+            Logger.getLogger(MenjadoraReader.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public void setLimitDiari(double limitDiari, DatabaseManager databaseManager) {
         this.limitDiari = limitDiari;
-        databaseManager.updateValueMaquina("limitDiari", EoD, String.valueOf(limitDiari));
+        try {
+            databaseManager.updateValueMaquina("limitDiari", EoD, String.valueOf(limitDiari));
+        } catch (SQLException ex) {
+            Logger.getLogger(MenjadoraReader.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public void setValorDiposit(double valorDiposit, DatabaseManager databaseManager) {
         this.valorDiposit = valorDiposit;
-        databaseManager.updateValueMaquina("valorDiposit", EoD, String.valueOf(valorDiposit));
+        try {
+            databaseManager.updateValueMaquina("valorDiposit", EoD, String.valueOf(valorDiposit));
+        } catch (SQLException ex) {
+            Logger.getLogger(MenjadoraReader.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public void setLimitRaccionsDia(double limitRaccionsDia, DatabaseManager databaseManager) {
         this.limitRaccionsDia = limitRaccionsDia;
-        databaseManager.updateValueMaquina("limitRaccionsDia", EoD, String.valueOf(limitRaccionsDia));
+        try {
+            databaseManager.updateValueMaquina("limitRaccionsDia", EoD, String.valueOf(limitRaccionsDia));
+        } catch (SQLException ex) {
+            Logger.getLogger(MenjadoraReader.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     public void setSensorPlat(double sensorPlat) {
         this.sensorPlat = sensorPlat;
@@ -116,5 +147,13 @@ public class MenjadoraReader {
 
     public double getLimitRaccionsDia() {
         return limitRaccionsDia;
+    }
+
+    public double getValorAlertaDiposit() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
+    public void setValorAlertaDiposit(double parseDouble) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }

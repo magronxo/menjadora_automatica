@@ -8,6 +8,7 @@ public class MenjadoraReader {
     double limitDiari;
     double valorDiposit;
     double limitRaccionsDia;
+    double valorAlertaDiposit;//Afegit
     MascotaReader mascota;
     public MenjadoraReader() {
         this.mascota = new MascotaReader();
@@ -28,22 +29,33 @@ public class MenjadoraReader {
     public void setGramsRaccio(double gramsRaccio) {
         this.gramsRaccio = gramsRaccio;
     }
-
-    public void setLimitDiari(double limitDiari) {
-        this.limitDiari = limitDiari;
-    }
-
     public void setValorDiposit(double valorDiposit) {
         this.valorDiposit = valorDiposit;
-    }
-
-    public void setLimitRaccionsDia(double limitRaccionsDia) {
-        this.limitRaccionsDia = limitRaccionsDia;
     }
     public void setMascota(MascotaReader mascota) {
         this.mascota = mascota;
     }
 
+    public void setValorAlertaDiposit(double valorAlertaDiposit) {
+        this.valorAlertaDiposit = valorAlertaDiposit;
+    }
+
+    public void setLimitDiari(double limitDiari) {
+        this.limitDiari = limitDiari;
+    }
+
+    public void setLimitRaccionsDia(double limitRaccionsDia) {
+        this.limitRaccionsDia = limitRaccionsDia;
+    }
+
+    public double getLimitDiari() {
+        return limitDiari;
+    }
+
+    public double getLimitRaccionsDia() {
+        return limitRaccionsDia;
+    }
+    
 
     public MascotaReader getMascota() {
         return mascota;
@@ -63,16 +75,10 @@ public class MenjadoraReader {
     public double getGramsRaccio() {
         return gramsRaccio;
     }
-
-    public double getLimitDiari() {
-        return limitDiari;
-    }
-
     public double getValorDiposit() {
         return valorDiposit;
     }
-
-    public double getLimitRaccionsDia() {
-        return limitRaccionsDia;
+    public double getValorAlertaDiposit() {
+        return valorAlertaDiposit;
     }
 }

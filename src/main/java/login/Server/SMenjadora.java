@@ -1,17 +1,24 @@
 package login.Server;
 
 import com.influxdb.client.JSON;
+import java.sql.SQLException;
 import login.Server.MenjadoraReader.MenjadoraReader;
 import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class SMenjadora {
     DatabaseManager databaseManager;
     public SMenjadora() {
-        databaseManager = new DatabaseManager("idMaquina1"); /* ID provisional, cada màquina
-                                                                      /* tindrà un ID únic.           */
+        try {
+            databaseManager = new DatabaseManager("idMaquina1"); /* ID provisional, cada màquina
+            /* tindrà un ID únic.           */
+        } catch (SQLException ex) {
+            Logger.getLogger(SMenjadora.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public String firstUpdate(){
@@ -36,18 +43,25 @@ public class SMenjadora {
 
         for (String i : valorsALlegir.keySet()) {
             int valorEoD = valorsALlegir.get(i);
-            switch (valorEoD) {
-                case 0:
-                    menjadoraEsquerra.put(i, databaseManager.readValueMaquina(i, 0));
-                    break;
-                case 1:
-                    menjadoraDreta.put(i, databaseManager.readValueMaquina(i, 1));
-                    break;
-                case 2:
-                    menjadoraEsquerra.put(i, databaseManager.readValueMaquina(i, 0));
-                    menjadoraDreta.put(i, databaseManager.readValueMaquina(i, 1));
-                    break;
-            }
+            try{                           
+                switch (valorEoD) {
+                    case 0:
+
+                    menjadoraEsquerra.put(i, databaseManager.readValueMaquina(i, 0));   
+
+                        break;
+
+                    case 1:
+                        menjadoraDreta.put(i, databaseManager.readValueMaquina(i, 1));
+                        break;
+                    case 2:
+                        menjadoraEsquerra.put(i, databaseManager.readValueMaquina(i, 0));
+                        menjadoraDreta.put(i, databaseManager.readValueMaquina(i, 1));
+                        break;
+                }
+            } catch (SQLException ex) {
+                        Logger.getLogger(SMenjadora.class.getName()).log(Level.SEVERE, null, ex);
+                    }
         }
 
         // Inici codi provisional per la mascota
