@@ -395,7 +395,7 @@ public class Pantalla_Principal extends javax.swing.JFrame {
         alertaDipositEsquerraIcon.setText("jLabel6");
         jPanel1.add(alertaDipositEsquerraIcon, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 190, 70, 60));
 
-        simulaMotorEsquerraIcon.setIcon(new javax.swing.ImageIcon("C:\\Users\\oriol\\OneDrive\\Documents\\NetBeansProjects\\Servidor_Menjadora-master\\src\\main\\java\\gui\\view\\images\\appbar.transform.rotate.counterclockwiseb.png")); // NOI18N
+        simulaMotorEsquerraIcon.setIcon(new javax.swing.ImageIcon("C:\\Users\\oriol\\OneDrive\\Documents\\NetBeansProjects\\Servidor_Menjadora-master\\src\\main\\java\\gui\\view\\images\\appbar.transform.rotateb.clockwise.png")); // NOI18N
         simulaMotorEsquerraIcon.setText("jLabel8");
         jPanel1.add(simulaMotorEsquerraIcon, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 350, 80, 60));
 
@@ -405,11 +405,11 @@ public class Pantalla_Principal extends javax.swing.JFrame {
 
         blockMotorEsquerraIcon.setIcon(new javax.swing.ImageIcon("C:\\Users\\oriol\\OneDrive\\Documents\\NetBeansProjects\\Servidor_Menjadora-master\\src\\main\\java\\gui\\view\\images\\red-cross-icon.png")); // NOI18N
         blockMotorEsquerraIcon.setText("jLabel10");
-        jPanel1.add(blockMotorEsquerraIcon, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 360, -1, -1));
+        jPanel1.add(blockMotorEsquerraIcon, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 360, 50, -1));
 
         blockMotorDretaIcon.setIcon(new javax.swing.ImageIcon("C:\\Users\\oriol\\OneDrive\\Documents\\NetBeansProjects\\Servidor_Menjadora-master\\src\\main\\java\\gui\\view\\images\\red-cross-icon.png")); // NOI18N
         blockMotorDretaIcon.setText("jLabel11");
-        jPanel1.add(blockMotorDretaIcon, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 360, -1, -1));
+        jPanel1.add(blockMotorDretaIcon, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 360, 50, -1));
 
         boto_estadistiques.setBackground(new java.awt.Color(102, 102, 102));
         boto_estadistiques.setIcon(new javax.swing.ImageIcon("C:\\Users\\oriol\\OneDrive\\Documents\\NetBeansProjects\\Servidor_Menjadora-master\\src\\main\\java\\gui\\view\\images\\appbar.graph.line.up.png")); // NOI18N

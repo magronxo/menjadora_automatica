@@ -80,9 +80,7 @@ public class Maquina {
         
         menjadoraDreta.setDosisDiaria(mascotaDreta.getGat(), mascotaDreta.getEdat(), mascotaDreta.getPesMascota());
         menjadoraEsquerra.setDosisDiaria(mascotaEsquerra.getGat(), mascotaEsquerra.getEdat(), mascotaEsquerra.getPesMascota());
-        
-        
-        
+
         dadesDreta = new Dades().addDades(menjadoraDreta);        
         dadesEsquerra = new Dades().addDades(menjadoraEsquerra);
 
@@ -101,23 +99,45 @@ public class Maquina {
         //Creem DataBase (Org amb 2 buckets) quan l'usuari inicia sessio per primer cop
         //dadesDreta.creaDataBase();
         
-        //dadesDreta.escriuDades(menjadoraDreta.getGramsAcumulatAvui());
-        //dadesEsquerra.escriuDades(menjadoraEsquerra.getGramsAcumulatAvui());
+        //ESCRIVIM LES DADES DE LA MENJADORA
+        //dadesDreta.recordMenjadoraDreta("limitDiari",menjadoraDreta.getLimitDiari());
+        //dadesEsquerra.recordMenjadoraEsquerra("limitDiari",menjadoraEsquerra.getLimitDiari());
         
-        //dadesDreta.llegeixDades();
+        //L'acumulat avui el voldria escriure cada execució 60s
+        //dadesDreta.recordMenjadoraDreta("gramsAcumulatsAvui",menjadoraDreta.getGramsAcumulatAvui());
+        //dadesEsquerra.recordMenjadoraEsquerra("gramsAcumulatsAvui",menjadoraEsquerra.getGramsAcumulatAvui());
+        
+        
+        
+        dadesDreta.recordMenjadoraDreta("gramsRaccio",menjadoraDreta.getGramsRaccio());
+        //dadesEsquerra.recordMenjadoraEsquerra("gramsRaccio",menjadoraEsquerra.getGramsRaccio());
+        
+        //Sensor Plat el voldria escriure cada mitja execució (30s)
+        dadesDreta.recordMenjadoraDreta("sensorPlat",menjadoraDreta.getSensorPlat().getValor());
+        //dadesEsquerra.recordMenjadoraEsquerra("sensorPlat",menjadoraEsquerra.getSensorPlat().getValor());
+        
+        //ESCRIVIM LES DADES DEL DIPOSIT
+        dadesDreta.recordDipositDreta("sensorNivell",menjadoraDreta.getDiposit().getSensorNivell().getValor());
+        //dadesEsquerra.recordDipositEsquerra("sensorNivell",menjadoraEsquerra.getDiposit().getSensorNivell().getValor());
+        
+        dadesDreta.recordDipositDreta("valorAlertaDiposit",menjadoraDreta.getDiposit().getValorAlertaDiposit());
+        //dadesEsquerra.recordDipositEsquerra("valorAlertaDiposit",menjadoraEsquerra.getDiposit().getValorAlertaDiposit());
+        
+        dadesDreta.recordDipositDreta("valorDipositBuit",menjadoraDreta.getDiposit().getDIPOSIT_BUIT());
+        dadesEsquerra.recordDipositEsquerra("valorDipositBuit",menjadoraEsquerra.getDiposit().getDIPOSIT_BUIT());
+        dadesDreta.llegeixDades();
         //dadesEsquerra.llegeixDades();
+        
+        
         
         menjadoraDreta.resetejaDia();
         menjadoraEsquerra.resetejaDia();
-        
-        
-        //controlador.escriuValorsGui();
-        
+
         //DESBLOCA EL MOTOR SI EL DIPÒSTI NO ESTA BUIT
-        if(!menjadoraDreta.getDiposit().estaBuit()){
+        if(!menjadoraDreta.getDiposit().estaBuit() && !menjadoraDreta.getMotorMenjadora().isBlock()){
             menjadoraDreta.getMotorMenjadora().desblocaRele();
         }
-        if(!menjadoraEsquerra.getDiposit().estaBuit()){
+        if(!menjadoraEsquerra.getDiposit().estaBuit() && !menjadoraEsquerra.getMotorMenjadora().isBlock()){
             menjadoraEsquerra.getMotorMenjadora().desblocaRele();
         }
     }

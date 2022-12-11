@@ -4,6 +4,7 @@
  */
 package server.machine.io;
 
+import server.Maquina;
 import server.machine.Mascota;
 import server.machine.io.Sensor;
 
@@ -22,7 +23,7 @@ public class Simulador {
     public double sensorNivell_dreta = 2;
     
     //CONSTRUCTORS
-    public Simulador(boolean dreta){
+    public Simulador(Maquina maquina){
         this.dreta=dreta;
 
     }
@@ -82,11 +83,25 @@ public class Simulador {
     
     //METODES
     public static Simulador addSimulador(boolean dreta){
-        return new Simulador(dreta);
+        return new Simulador();
     }
     
     //FUNCIONS
-
+    public void startSimulacio(boolean sortirPrograma){
+        while(!sortirPrograma){
+            simulaGat();
+            simulaHuma();
+        }
+    }
+    
+    public void simulaGat(){
+        
+    }
+    
+    public void simulaHuma(){
+        
+    }
+    
     //Divideix el nombre de raccions entre 24 hores
     public void reparteixRaccions(double raccions){
         double tempsEntreRaccions = raccions / 24;
@@ -106,8 +121,6 @@ public class Simulador {
         }else{
             System.out.println("Plat buit, la mascota " + nomMascota +  " no ha menjat!");
         }
-            
-            
         
     }
     

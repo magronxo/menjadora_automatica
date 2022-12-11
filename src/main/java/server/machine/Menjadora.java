@@ -35,18 +35,15 @@ public class Menjadora {
     private Diposit diposit;
     private Actuador motorMenjadora;
     private Sensor sensorPlat;
-    private Simulador simulador;
-
 
     //CONSTRUCTORS
-    public Menjadora(boolean dreta, Diposit diposit, Actuador motorMenjadora, Mascota mascota, Sensor sensorPlat, Simulador simulador){
+    public Menjadora(boolean dreta, Diposit diposit, Actuador motorMenjadora, Mascota mascota, Sensor sensorPlat){
         this.dreta=dreta;
         this.diposit=diposit;
         this.motorMenjadora=motorMenjadora;
         this.sensorPlat=sensorPlat;
         this.raccionsAcumuladesAvui=0;
         this.mascota = mascota;
-        this.simulador=simulador;
         this.horaUltimaRaccio = new Timestamp(System.currentTimeMillis());
     }
     
@@ -106,7 +103,7 @@ public class Menjadora {
     //Pantalla Configuracio permet canviar aquest paràmetre
     public void setLimitDiari(int limitDiari){
         //Control d'errors d'entrada
-        if(limitDiari > 0 && limitDiari < 1000){
+        if(limitDiari >= 0 && limitDiari < 1000){
             this.limitDiari = limitDiari;
         }else{
             limitDiari = 160;
@@ -118,7 +115,7 @@ public class Menjadora {
     //Pantalla Configuracio permet canviar aquest paràmetre
     public void setRaccionsAlDia(int limitRaccionsDia){
         //Control d'errors d'entrada
-        if(limitRaccionsDia > 0 && limitRaccionsDia < 48){
+        if(limitRaccionsDia >= 0 && limitRaccionsDia < 48){
             this.limitRaccionsDia = limitRaccionsDia;
         }else{
             limitRaccionsDia = 9;
@@ -129,12 +126,11 @@ public class Menjadora {
     
     //MÈTODES
     public static Menjadora addMenjadora(boolean dreta, Mascota mascota){
-        Simulador simulador = new Simulador(dreta);
-        Diposit diposit = new Diposit().addDiposit(simulador.retornaNivell());
+        Diposit diposit = new Diposit().addDiposit();
         Actuador motor = new Actuador().addMotor();
         Sensor sensorPlat = new Sensor().addSensor(TIPUS_SENSOR,1);  
        
-        return new Menjadora(dreta, diposit, motor, mascota, sensorPlat, simulador);
+        return new Menjadora(dreta, diposit, motor, mascota, sensorPlat);
     }
     
     //FUNCIONS DE CÀLCUL
@@ -164,10 +160,22 @@ public class Menjadora {
     
     //En funció del limitDiari i les raccionsAlDia calcula els gramsRaccio i les horesEntreRaccions    
    public void calculaRaccio(){
-        gramsRaccio = (double)limitDiari / limitRaccionsDia;
-        horesEntreRaccions = (double)24 / limitRaccionsDia;
-        gramsRaccio = new BigDecimal(gramsRaccio).setScale(2, RoundingMode.HALF_UP).doubleValue();
-        horesEntreRaccions = new BigDecimal(horesEntreRaccions).setScale(2, RoundingMode.HALF_UP).doubleValue();  
+       //Si l'usuari posa a 0 aquests valors significa que DESACTIVA el funcionament/simulació d'aquella menjadora
+       if(limitDiari == 0 ||  limitRaccionsDia == 0){
+           //Desactivem menjadora, bloquem relé i posem tots els valors a zero per aturar el funcionament/simulació
+            motorMenjadora.blocaRele();
+            gramsRaccio = 0; 
+            horesEntreRaccions = 0;
+            limitDiari = 0;
+            limitRaccionsDia = 0;
+            
+       }else{
+            gramsRaccio = (double)limitDiari / limitRaccionsDia;
+            horesEntreRaccions = (double)24 / limitRaccionsDia;
+            gramsRaccio = new BigDecimal(gramsRaccio).setScale(2, RoundingMode.HALF_UP).doubleValue();
+            horesEntreRaccions = new BigDecimal(horesEntreRaccions).setScale(2, RoundingMode.HALF_UP).doubleValue();    
+       }
+         
     }
 
     //------------  FUNCIONAMENT -----------
@@ -194,21 +202,21 @@ public class Menjadora {
             
         }else{
             //Bloca el motor si ha assolit el limit de raccions;
-            this.motorMenjadora.blocaRele();
+            //this.motorMenjadora.blocaRele();
         }
-        simulador.mascotaMenja(sensorPlat, mascota.getNom());
+        //simulador.mascotaMenja(sensorPlat, mascota.getNom());
         this.gramsAcumulatAvui+= gramsRaccio;
         
         //Comprova l'estat del dipòsit per actualitzar els nivells d'alerta i buit
         //diposit.comprovaDiposit();
         
-        //BLOCA-DESBLOCA MOTOR EN FUNCIÓ DEL NIVELL DEL DIPÒSIT
+        /*//BLOCA-DESBLOCA MOTOR EN FUNCIÓ DEL NIVELL DEL DIPÒSIT
         if(diposit.estaBuit()){
-            motorMenjadora.blocaRele();
+            //motorMenjadora.blocaRele();
         }else if(simulador.carregaDiposit(dreta)){
             System.out.println("El dipòsit de la "+diposit.stringDreta()+" ha estat emplenat");
-            motorMenjadora.desblocaRele();
-        }
+            //motorMenjadora.desblocaRele();
+        }*/
     }
     public void resetejaDia(){
         this.raccionsAcumuladesAvui = 0;
@@ -240,13 +248,13 @@ public class Menjadora {
     
 
     
-    public void aturaMotorPerPes(double pesInicial, double gramsRaccio){
+    /*public void aturaMotorPerPes(double pesInicial, double gramsRaccio){
         //Atura el motor quan arriba al pes de la Raccio
         //sensorPlat.setValorSimulador(simulador.retornaPlat());
         if(sensorPlat.getValor() >= pesInicial + gramsRaccio){
             motorMenjadora.desactivaRele();
         }         
-    }
+    }*/
     
     public void raccioExtra(double quantitatRacio){
         activaMotor(sensorPlat.getValor(), quantitatRacio);

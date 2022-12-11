@@ -40,6 +40,8 @@ public class Dades {
     private static String org = "CollSalvia";
     private static String bucket = "data";
     
+    //USUARI INFLUX UI: admin
+    //PASSWORD: bitnami123
     
     //CONSTRUCTORS
     public Dades(Menjadora menjadora){
@@ -62,40 +64,48 @@ public class Dades {
     //FUNCIONS
     
     
-    public void escriuDades(double gramsAcumulatAvui){
+    public void recordMenjadoraDreta(String nomDada, double valor){
         
         InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:8086", token, org, bucket);
         WriteApiBlocking writeApi = influxDBClient.getWriteApiBlocking();
 
-        //
-        // Write by Data Point
-        //
-        /*Point point = Point.measurement("temperature")
-                .addTag("location", "west")
-                .addField("value", 55D)
+        Point point = Point.measurement(nomDada)
+                .addField("value", valor)
                 .time(Instant.now().toEpochMilli(), WritePrecision.MS);
-
-        writeApi.writePoint(point);*/
-
-        //
-        // Write by LineProtocol
-        //
-        writeApi.writeRecord(WritePrecision.NS, "Menjadora,dreta?="+ menjadora.isDreta()+" gramsAcumulatAvui="+gramsAcumulatAvui);
-
-        //
-        // Write by POJO
-        //
-        Raccions raccions = new Raccions();
-        //raccions.limitRaccionsDia = this.menjadora.getLimitRaccionsDia();
-        raccions.menjadora = menjadora.isDreta();
-        raccions.value = this.menjadora.getRaccionsAcumuladesAvui();
-        raccions.time = Instant.now();
-
-        writeApi.writeMeasurement( WritePrecision.NS, raccions);
-        influxDBClient.close();
-        
-        System.out.println("Dades escrites!");
+        writeApi.writePoint(point);
     }
+    
+    public void recordMenjadoraEsquerra(String nomDada, double valor){      
+        InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:8086", token, org, bucket);
+        WriteApiBlocking writeApi = influxDBClient.getWriteApiBlocking();
+
+        Point point = Point.measurement(nomDada)
+                .addField("value", valor)
+                .time(Instant.now().toEpochMilli(), WritePrecision.MS);
+        writeApi.writePoint(point);
+    }
+    
+    public void recordDipositDreta(String nomDada, double valor){ 
+        InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:8086", token, org, bucket);
+        WriteApiBlocking writeApi = influxDBClient.getWriteApiBlocking();
+
+        Point point = Point.measurement(nomDada)
+                .addField("value", valor)
+                .time(Instant.now().toEpochMilli(), WritePrecision.MS);
+        writeApi.writePoint(point);
+    }
+    
+    public void recordDipositEsquerra(String nomDada, double valor){   
+        InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:8086", token, org, bucket);
+        WriteApiBlocking writeApi = influxDBClient.getWriteApiBlocking();
+
+        Point point = Point.measurement(nomDada)
+                .addField("value", valor)
+                .time(Instant.now().toEpochMilli(), WritePrecision.MS);
+        writeApi.writePoint(point);
+    }
+    
+    
     
     
     public Menjadora llegeixDades(){

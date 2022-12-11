@@ -59,6 +59,11 @@ public class Diposit {
     /*public boolean isDipositBuit() {
         return dipositBuit;
     }*/
+
+    public static double getDIPOSIT_BUIT() {
+        return DIPOSIT_BUIT;
+    }
+    
     
     public void setValorAlertaDiposit(double valorAlertaDiposit) {
         if(valorAlertaDiposit > 15 && valorAlertaDiposit < 40){
@@ -70,8 +75,8 @@ public class Diposit {
     
     
         //METODES
-    public static Diposit addDiposit(double valorSensor){
-        Sensor sensorNivell = new Sensor().addSensor(TIPUS_SENSOR, valorSensor);
+    public static Diposit addDiposit(){
+        Sensor sensorNivell = new Sensor().addSensor(TIPUS_SENSOR, 0);
         return new Diposit(sensorNivell,dreta);
     }
     

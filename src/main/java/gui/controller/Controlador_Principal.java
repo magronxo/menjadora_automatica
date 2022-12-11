@@ -64,18 +64,34 @@ public class Controlador_Principal {
         if(menjadoraEsquerra.getDiposit().isAlertaDiposit()){principal.getAlertaDipositEsquerraIcon().setVisible(true);}
         
         //Icona rotacio Motor
-        principal.getSimulaMotorDretaIcon().setVisible(false);
-        principal.getSimulaMotorEsquerraIcon().setVisible(false);
         //La pintem si el interruptor del motor està accionat
-        if(menjadoraDreta.getMotorMenjadora().isInterruptor()){principal.getSimulaMotorDretaIcon().setVisible(true);}
-        if(menjadoraEsquerra.getMotorMenjadora().isInterruptor()){principal.getSimulaMotorEsquerraIcon().setVisible(true);}
+        if(menjadoraDreta.getMotorMenjadora().isInterruptor()){
+            principal.getSimulaMotorDretaIcon().setVisible(true);
+        }else{
+            principal.getSimulaMotorDretaIcon().setVisible(false);
+        }
+        if(menjadoraEsquerra.getMotorMenjadora().isInterruptor()){
+            principal.getSimulaMotorEsquerraIcon().setVisible(true);
+        }else{
+            principal.getSimulaMotorEsquerraIcon().setVisible(false);
+        }
         
         //Icona Block Motor
-        principal.getBlockMotorDretaIcon().setVisible(false);
-        principal.getBlockMotorEsquerraIcon().setVisible(false);
+        if(menjadoraDreta.getMotorMenjadora().isBlock()){
+            principal.getBlockMotorDretaIcon().setVisible(true);
+        }else{
+            principal.getBlockMotorDretaIcon().setVisible(false);
+        }
+        
+        if(menjadoraEsquerra.getMotorMenjadora().isBlock()){
+            principal.getBlockMotorEsquerraIcon().setVisible(true);
+        }else{
+            principal.getBlockMotorEsquerraIcon().setVisible(false);
+        }
+        
         //La pintem si el motor de la Menjadora esta bloquejat. El diposit estaBuit() també  el bloqueja
-        if(menjadoraDreta.getMotorMenjadora().isBlock()){principal.getBlockMotorDretaIcon().setVisible(true);}
-        if(menjadoraEsquerra.getMotorMenjadora().isBlock()){principal.getBlockMotorEsquerraIcon().setVisible(true);}
+        //if(menjadoraDreta.getMotorMenjadora().isBlock()){principal.getBlockMotorDretaIcon().setVisible(true);}
+        //if(menjadoraEsquerra.getMotorMenjadora().isBlock()){principal.getBlockMotorEsquerraIcon().setVisible(true);}
         
         //PINTEM LA RESTA DE VALORS DE LA PANTALLA PRINCIPAL
         //Arrodonim els sensors de pes a 2 decimals:
@@ -112,9 +128,13 @@ public class Controlador_Principal {
         this.principal.getHoraPantalla().setText(String.valueOf((int)Servidor_Menjadora.getHoresExecucio())+" hores");
         this.principal.getDiaMesHoraPantalla().setText(retornaDia());
         
-        this.principal.progressBarDreta.setValue(((int)this.menjadoraDreta.getGramsAcumulatAvui()*100)/(int)this.menjadoraDreta.getLimitDiari());
-        this.principal.progressBarEsquerra.setValue(((int)this.menjadoraEsquerra.getGramsAcumulatAvui()*100)/(int)this.menjadoraEsquerra.getLimitDiari());
-        
+        if(!menjadoraDreta.getMotorMenjadora().isBlock()){
+            this.principal.progressBarDreta.setValue(((int)this.menjadoraDreta.getGramsAcumulatAvui()*100)/(int)this.menjadoraDreta.getLimitDiari());
+        }
+        while(!menjadoraEsquerra.getMotorMenjadora().isBlock()){
+            this.principal.progressBarEsquerra.setValue(((int)this.menjadoraEsquerra.getGramsAcumulatAvui()*100)/(int)this.menjadoraEsquerra.getLimitDiari());
+            return;
+        }
     }
     
     public String retornaDia(){

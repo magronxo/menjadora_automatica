@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import server.machine.io.Simulador;
 
 /**
  *
@@ -25,6 +26,7 @@ public class Servidor_Menjadora {
     private static boolean sortirPrograma = false;
     private static Maquina maquina;
     private static double horesExecucio;
+    private static Simulador simulador;
 
 
     //CONSTRUCTORS
@@ -48,10 +50,12 @@ public class Servidor_Menjadora {
            
         ArrayList<Maquina> maquines = new ArrayList<Maquina>();
         
+        
         maquina = new Maquina();
         maquines.add(maquina.addMaquina(1));
         horesExecucio = 0;
         
+        simulador = new Simulador (maquina);
         
         
         while(!sortirPrograma){
@@ -66,7 +70,7 @@ public class Servidor_Menjadora {
                 }
             }
             try {
-                TimeUnit.SECONDS.sleep(1);//Important! Definim el temps entre execucions del programa     
+                TimeUnit.SECONDS.sleep(6);//Important! Definim el temps entre execucions del programa     
                 
             } catch (InterruptedException ex) {
                 Logger.getLogger(Servidor_Menjadora.class.getName()).log(Level.SEVERE, null, ex);

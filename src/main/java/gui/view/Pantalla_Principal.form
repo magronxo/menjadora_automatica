@@ -819,7 +819,7 @@
         <Component class="javax.swing.JLabel" name="simulaMotorEsquerraIcon">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="2" name="C:\Users\oriol\OneDrive\Documents\NetBeansProjects\Servidor_Menjadora-master\src\main\java\gui\view\images\appbar.transform.rotate.counterclockwiseb.png"/>
+              <Image iconType="2" name="C:\Users\oriol\OneDrive\Documents\NetBeansProjects\Servidor_Menjadora-master\src\main\java\gui\view\images\appbar.transform.rotateb.clockwise.png"/>
             </Property>
             <Property name="text" type="java.lang.String" value="jLabel8"/>
           </Properties>
@@ -851,7 +851,7 @@
           </Properties>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-              <AbsoluteConstraints x="430" y="360" width="-1" height="-1"/>
+              <AbsoluteConstraints x="430" y="360" width="50" height="-1"/>
             </Constraint>
           </Constraints>
         </Component>
@@ -864,7 +864,7 @@
           </Properties>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout" value="org.netbeans.modules.form.compat2.layouts.DesignAbsoluteLayout$AbsoluteConstraintsDescription">
-              <AbsoluteConstraints x="540" y="360" width="-1" height="-1"/>
+              <AbsoluteConstraints x="540" y="360" width="50" height="-1"/>
             </Constraint>
           </Constraints>
         </Component>
