@@ -5,15 +5,20 @@
 package gui.controller;
 
 import gui.view.Pantalla_Configuracio;
+import gui.view.Pantalla_Estadistiques;
 import gui.view.Pantalla_Principal;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.sql.Timestamp;
 import server.machine.Menjadora;
 import server.Servidor_Menjadora;
-import java.text.Format;  
 import java.text.SimpleDateFormat;  
-import java.util.Date;  
 import java.util.Calendar;  
+import java.util.Locale;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import server.data.Dades;
 
 
 /**
@@ -25,6 +30,8 @@ public class Controlador_Principal {
     private static Pantalla_Principal principal;
     private static Controlador_Configuracio confControl;
     private static Menjadora menjadoraDreta, menjadoraEsquerra;
+    
+    private Calendar cal;
     
     //CONSTRUCTORS
     public Controlador_Principal(Pantalla_Principal principal,Controlador_Configuracio configuracio, Menjadora menjadoraDreta, Menjadora menjadoraEsquerra){
@@ -42,10 +49,13 @@ public class Controlador_Principal {
     }
     
     //METODES
-    public static Controlador_Principal addControlador(Menjadora menjadoraDreta, Menjadora menjadoraEsquerra){
+    public static Controlador_Principal addControlador(Menjadora menjadoraDreta, Menjadora menjadoraEsquerra, Dades dadesDreta, Dades dadesEsquerra){
 
-        Pantalla_Configuracio confScreen = new Pantalla_Configuracio();      
-        Pantalla_Principal principal = new Pantalla_Principal(confScreen);
+        Pantalla_Configuracio confScreen = new Pantalla_Configuracio();
+        Pantalla_Estadistiques chartScreenDreta = new Pantalla_Estadistiques(dadesDreta);
+        Pantalla_Estadistiques chartScreenEsquerra = new Pantalla_Estadistiques(dadesEsquerra);
+        
+        Pantalla_Principal principal = new Pantalla_Principal(confScreen,chartScreenDreta,chartScreenEsquerra);
         
         confControl = new Controlador_Configuracio();
         confControl.addControlador(confScreen, menjadoraDreta, menjadoraEsquerra);
@@ -60,18 +70,36 @@ public class Controlador_Principal {
         principal.getAlertaDipositDretaIcon().setVisible(false);
         principal.getAlertaDipositEsquerraIcon().setVisible(false);
         //El pintem si el dipòsit marca Alerta 
-        if(menjadoraDreta.getDiposit().isAlertaDiposit()){principal.getAlertaDipositDretaIcon().setVisible(true);}
-        if(menjadoraEsquerra.getDiposit().isAlertaDiposit()){principal.getAlertaDipositEsquerraIcon().setVisible(true);}
+        if(menjadoraDreta.getDiposit().isAlertaDiposit()){
+            principal.getAlertaDipositDretaIcon().setVisible(true);
+        }
+        if(menjadoraEsquerra.getDiposit().isAlertaDiposit()){
+            principal.getAlertaDipositEsquerraIcon().setVisible(true);
+        }
         
         //Icona rotacio Motor
         //La pintem si el interruptor del motor està accionat
         if(menjadoraDreta.getMotorMenjadora().isInterruptor()){
             principal.getSimulaMotorDretaIcon().setVisible(true);
+            try {
+                    TimeUnit.SECONDS.sleep(1);//Important! Definim el temps entre execucions del programa
+                    principal.getSimulaMotorDretaIcon().setVisible(false);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(Servidor_Menjadora.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            menjadoraDreta.getMotorMenjadora().desactivaRele();
         }else{
             principal.getSimulaMotorDretaIcon().setVisible(false);
         }
         if(menjadoraEsquerra.getMotorMenjadora().isInterruptor()){
             principal.getSimulaMotorEsquerraIcon().setVisible(true);
+            try {
+                    TimeUnit.SECONDS.sleep(1);//Important! Definim el temps entre execucions del programa
+                    principal.getSimulaMotorEsquerraIcon().setVisible(false);
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(Servidor_Menjadora.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            menjadoraEsquerra.getMotorMenjadora().desactivaRele();
         }else{
             principal.getSimulaMotorEsquerraIcon().setVisible(false);
         }
@@ -88,11 +116,7 @@ public class Controlador_Principal {
         }else{
             principal.getBlockMotorEsquerraIcon().setVisible(false);
         }
-        
-        //La pintem si el motor de la Menjadora esta bloquejat. El diposit estaBuit() també  el bloqueja
-        //if(menjadoraDreta.getMotorMenjadora().isBlock()){principal.getBlockMotorDretaIcon().setVisible(true);}
-        //if(menjadoraEsquerra.getMotorMenjadora().isBlock()){principal.getBlockMotorEsquerraIcon().setVisible(true);}
-        
+ 
         //PINTEM LA RESTA DE VALORS DE LA PANTALLA PRINCIPAL
         //Arrodonim els sensors de pes a 2 decimals:
         double gramsPlatDreta = new BigDecimal(this.menjadoraDreta.getSensorPlat().getValor()).setScale(1, RoundingMode.HALF_UP).doubleValue();
@@ -126,7 +150,6 @@ public class Controlador_Principal {
         this.principal.getRaccionsEsquerra().setText(String.valueOf(this.menjadoraEsquerra.getLimitRaccionsDia()));
         
         this.principal.getHoraPantalla().setText(String.valueOf((int)Servidor_Menjadora.getHoresExecucio())+" hores");
-        this.principal.getDiaMesHoraPantalla().setText(retornaDia());
         
         if(!menjadoraDreta.getMotorMenjadora().isBlock()){
             this.principal.progressBarDreta.setValue(((int)this.menjadoraDreta.getGramsAcumulatAvui()*100)/(int)this.menjadoraDreta.getLimitDiari());
@@ -136,21 +159,26 @@ public class Controlador_Principal {
             return;
         }
     }
-    
+    public void sumaDia(int diesSimulats){
+        //int i=1;
+        if(diesSimulats==0){
+            this.principal.getDiaMesHoraPantalla().setText(retornaDia());
+        }else{
+            cal = Calendar.getInstance();
+            Timestamp date = new Timestamp(System.currentTimeMillis());
+            cal.setTime(date);
+            cal.add(Calendar.DATE, diesSimulats); //minus number would decrement the days
+            SimpleDateFormat sdf = new SimpleDateFormat("EEEEEEEEE,dd-MM-yyyy", new Locale ("ca","CA"));
+            String diaSumat = sdf.format(cal.getTime());
+            this.principal.getDiaMesHoraPantalla().setText(diaSumat);
+        }
+        
+    }
+
     public String retornaDia(){
-        //returns a Calendar object whose calendar fields have been initialized with the current date and time  
         Calendar cal = Calendar.getInstance();  
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");  
-        Format f = new SimpleDateFormat("EEEE");  
-        String dia = f.format(new Date());  
-        if(dia.equals("lunes"))dia="Dilluns";
-        if(dia.equals("martes"))dia="Dimarts";
-        if(dia.equals("miercoles"))dia="Dimecres";
-        if(dia.equals("jueves"))dia="Dijous";
-        if(dia.equals("viernes"))dia="Divendres";
-        if(dia.equals("sabado"))dia="Dissabte";
-        if(dia.equals("domingo"))dia="Diumenge";   
-        return dia+", "+sdf.format(cal.getTime());
+        SimpleDateFormat sdf = new SimpleDateFormat("EEEEEEEEE,dd-MM-yyyy", new Locale ("ca","CA"));  
+        return sdf.format(cal.getTime());
     }
     
     //ACCESSORS

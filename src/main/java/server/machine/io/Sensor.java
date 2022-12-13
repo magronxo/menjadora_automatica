@@ -4,6 +4,9 @@
  */
 package server.machine.io;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 /**
  *
  * @author oriol
@@ -33,21 +36,14 @@ public class Sensor {
     //ACCESSORS
     
     public double getValor() {
+        valor = new BigDecimal(valor).setScale(2, RoundingMode.HALF_UP).doubleValue();
         return valor;
     }
+    public void setValorSimulador(double valor){
+        this.valor = valor;
+    } 
     //METODES
     public static Sensor addSensor(int tipus, double valor){
-        //int id,tipus;
-        //double valor = llegeixValor(tipus);
-        
         return new Sensor(tipus, valor);
     }
-
-    
-    //FUNCIONS
-    public void setValorSimulador(double valor){
-        
-        this.valor = valor;
-
-    } 
 }

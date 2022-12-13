@@ -24,17 +24,21 @@ public class Menjadora {
     
     private static final int TIPUS_SENSOR = 1;
     private static final int KG_MARGE_PES = 1;
+    private static final double LIMIT_PES_PLAT = 2;
+    private static final int HORA_SEGONS = 1; ///Important! Aquí definim quants segons dura una hora a la simulació. Al programa final posar 3600. 1/HORES_PER_SEGON
 
     //VARIABLES
     private int limitRaccionsDia, percentatgeAvui, raccionsAcumuladesAvui;
     private boolean dreta;
     private double gramsRaccio,horesEntreRaccions, gramsAcumulatAvui, limitDiari;
-    private Timestamp horaUltimaRaccio;
     
     private Mascota mascota;
     private Diposit diposit;
     private Actuador motorMenjadora;
     private Sensor sensorPlat;
+    
+    private Timestamp horaUltimaRaccio;
+    private long initialTime;
 
     //CONSTRUCTORS
     public Menjadora(boolean dreta, Diposit diposit, Actuador motorMenjadora, Mascota mascota, Sensor sensorPlat){
@@ -180,20 +184,25 @@ public class Menjadora {
 
     //------------  FUNCIONAMENT -----------
     
-    public void simulaFuncionament(){
+    public void simulaFuncionament(long initialTime){
         if(this.raccionsAcumuladesAvui < this.limitRaccionsDia){
             //condicions per les quals activarem el procés de donar menjar
-            int horaSegons = 1; ///Important! Aquí definim quants segons dura una hora a la simulació. Al programa final posar 3600. 1/HORES_PER_SEGON
+            
             Timestamp horaActual = new Timestamp(System.currentTimeMillis());
-            Timestamp horesEntreRaccionsTs = new Timestamp((long)(horesEntreRaccions * horaSegons * 1000));
+            Timestamp horesEntreRaccionsTs = new Timestamp((long)(horesEntreRaccions * HORA_SEGONS * 1000));
             long debugHrAct = horaActual.getTime();
             long debugHrUltRacc = horaUltimaRaccio.getTime();
             long debugHrEntreRacc = horesEntreRaccionsTs.getTime();
             if(horaActual.getTime() - horaUltimaRaccio.getTime() >= horesEntreRaccionsTs.getTime()){
-                activaMotor(sensorPlat.getValor(), this.gramsRaccio);
-                this.raccionsAcumuladesAvui++;
-                this.horaUltimaRaccio = horaActual;
-                System.out.println("\nHem servit "+ raccionsAcumuladesAvui + " raccions a " + mascota.getNom());
+                if(sensorPlat.getValor() < LIMIT_PES_PLAT){
+                    activaMotor(sensorPlat.getValor(), this.gramsRaccio);
+                    this.raccionsAcumuladesAvui++;
+                    this.horaUltimaRaccio = horaActual;
+                    this.gramsAcumulatAvui+= gramsRaccio;
+                    System.out.println("\nHem servit "+ raccionsAcumuladesAvui + " raccions a " + mascota.getNom());
+                }else{
+                    System.out.println("\nTocaria racció a la "+ mascota.getNom() + "però té massa menjar al plat i no li hem donat" );
+                }
             }else{
                 System.out.println("\nNo és hora de servir racció a "+ mascota.getNom());
             }       
@@ -204,19 +213,7 @@ public class Menjadora {
             //Bloca el motor si ha assolit el limit de raccions;
             //this.motorMenjadora.blocaRele();
         }
-        //simulador.mascotaMenja(sensorPlat, mascota.getNom());
-        this.gramsAcumulatAvui+= gramsRaccio;
-        
-        //Comprova l'estat del dipòsit per actualitzar els nivells d'alerta i buit
-        //diposit.comprovaDiposit();
-        
-        /*//BLOCA-DESBLOCA MOTOR EN FUNCIÓ DEL NIVELL DEL DIPÒSIT
-        if(diposit.estaBuit()){
-            //motorMenjadora.blocaRele();
-        }else if(simulador.carregaDiposit(dreta)){
-            System.out.println("El dipòsit de la "+diposit.stringDreta()+" ha estat emplenat");
-            //motorMenjadora.desblocaRele();
-        }*/
+
     }
     public void resetejaDia(){
         this.raccionsAcumuladesAvui = 0;
@@ -224,30 +221,33 @@ public class Menjadora {
     }
     public void activaMotor(double pesInicial, double gramsRaccio){
         //Transforma gramsRacció en un tems límit que pot estar engegat
-        int segonsActivat = (int)gramsRaccio / 2;
-        int distanciaBuidatge = 1;
+        double distanciaBuidatge = 0.05*(int)gramsRaccio;//Calculem que cada gram de menjar són 
        
-        //sensorPlat.setValorSimulador(simulador.retornaPlat());
         while(sensorPlat.getValor() < pesInicial + gramsRaccio){
             if(!diposit.estaBuit()){
                motorMenjadora.activaRele();
                sensorPlat.setValorSimulador(sensorPlat.getValor()+gramsRaccio);
-               diposit.getSensorNivell().setValorSimulador(diposit.getSensorNivell().getValor()+distanciaBuidatge); 
+               if(diposit.getSensorNivell().getValor()-distanciaBuidatge < 0){
+                   diposit.getSensorNivell().setValorSimulador(0);
+               }else{
+                   diposit.getSensorNivell().setValorSimulador(diposit.getSensorNivell().getValor()-distanciaBuidatge);
+               }
+               diposit.setAlertaDiposit();
+               
             }else{
                 System.out.println("\nEl diposit està buit!");
                 System.out.println("Carregant diposit...");
-                diposit.getSensorNivell().setValorSimulador(0);
+                diposit.getSensorNivell().setValorSimulador(50);
                 System.out.println("Diposit carregat!");
             }
             
         }
+        
         System.out.println("Hem carregat "+ gramsRaccio + " grams al plat de " + mascota.getNom());
         System.out.println("La capacitat del diposit és del "+ diposit.getPercentatgeDiposit() + "%");
         System.out.println("El sensor del diposit està "+ diposit.getSensorNivell().getValor() + "cm. del pinso.Esta buit??" + diposit.estaBuit());
     }
-    
 
-    
     /*public void aturaMotorPerPes(double pesInicial, double gramsRaccio){
         //Atura el motor quan arriba al pes de la Raccio
         //sensorPlat.setValorSimulador(simulador.retornaPlat());

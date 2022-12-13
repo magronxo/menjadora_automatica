@@ -16,18 +16,16 @@ public class Actuador {
     //VARIABLES
     private boolean interruptor = false;
     private boolean block = false;
-    
-    
+       
     //CONSTRUCTOR
     public Actuador(){
     }
     
-
     //ACCESSORS
-    public boolean isInterruptor(){    
-        
+    public boolean isInterruptor(){      
         return interruptor;
     }
+    
     public boolean isBlock() {    
         return block;
     }
@@ -43,12 +41,10 @@ public class Actuador {
         if(!block){
             this.interruptor = true;
         }
-
     }
     
     public void desactivaRele(){
         this.interruptor = false;
-        //Atura l'increment de pes a la Simulació
     }
     
     public void blocaRele(){

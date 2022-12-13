@@ -6,24 +6,18 @@ package server.data;
 
 import java.time.Instant;
 import java.util.List;
-
 import com.influxdb.annotations.Column;
 import com.influxdb.annotations.Measurement;
 import com.influxdb.client.InfluxDBClient;
 import com.influxdb.client.InfluxDBClientFactory;
 import com.influxdb.client.QueryApi;
 import com.influxdb.client.WriteApiBlocking;
-import com.influxdb.client.domain.Authorization;
-import com.influxdb.client.domain.Bucket;
-import com.influxdb.client.domain.BucketRetentionRules;
-import com.influxdb.client.domain.Organization;
-import com.influxdb.client.domain.Permission;
-import com.influxdb.client.domain.PermissionResource;
 import com.influxdb.client.domain.WritePrecision;
 import com.influxdb.client.write.Point;
 import com.influxdb.query.FluxRecord;
 import com.influxdb.query.FluxTable;
-import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import server.machine.Menjadora;
 
 /**
@@ -39,6 +33,10 @@ public class Dades {
     private static char[] token = "k2109pBJ6Liiw96bDjsNyiq_40eX0M94B5UnR5xxs9C35ihn6Eu64SlTwGOV95ne9LCD8lb1oZi0rTZBpOQUgw==".toCharArray();
     private static String org = "CollSalvia";
     private static String bucket = "data";
+    
+    //private double [][] gramsRaccio;HashMap
+    Map<Integer, double[]> influxMenjadoraRecords = new HashMap<>();
+    Map<Integer, double[]> influxDipositRecords = new HashMap<>();
     
     //USUARI INFLUX UI: admin
     //PASSWORD: bitnami123
@@ -107,8 +105,8 @@ public class Dades {
     
     
     
-    
-    public Menjadora llegeixDades(){
+    //Retorna un Map<Integer, double[][][][]>
+    public Menjadora llegeixDadesMenjadora(){
         
         InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:8086", token, org, bucket);
         String flux = "from(bucket:\"data\") |> range(start: 0)";
@@ -119,9 +117,45 @@ public class Dades {
         for (FluxTable fluxTable : tables) {
             List<FluxRecord> records = fluxTable.getRecords();
             for (FluxRecord fluxRecord : records) {
-                System.out.println(fluxRecord.getTime() + ": " + fluxRecord.getValueByKey("_value"));
+                //System.out.println(fluxRecord.getTime() + ": " + fluxRecord.getMeasurement() + ": " +fluxRecord.getValueByKey("_value"));
+              
+   
+                if(fluxRecord.getMeasurement().equals("gramsRaccio")){
+                    System.out.println("\t\t"+fluxRecord.getTime() + ": " + fluxRecord.getMeasurement() + ": " +fluxRecord.getValueByKey("_value"));
+                    //double[][][][] recordsMenjadora = [][][][fluxRecord.getValueByKey("_value");];
+
+                }
+                //influxMenjadoraRecords.put(Integer.SIZE, value)
             }
         }
+        influxDBClient.close();
+        System.out.println("Dades llegides!");
+        return menjadora;
+    }
+    
+    public Menjadora llegeixDadesDiposit(){
+        
+        InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:8086", token, org, bucket);
+        String flux = "from(bucket:\"data\") |> range(start: 0)";
+
+        QueryApi queryApi = influxDBClient.getQueryApi();
+
+        List<FluxTable> tables = queryApi.query(flux);
+        for (FluxTable fluxTable : tables) {
+            List<FluxRecord> records = fluxTable.getRecords();
+            for (FluxRecord fluxRecord : records) {
+                System.out.println(fluxRecord.getTime() + ": " + fluxRecord.getMeasurement() + ": " +fluxRecord.getValueByKey("_value"));
+                if(fluxRecord.getMeasurement().equals("gramsRaccio")){
+                    System.out.println("\t\t"+fluxRecord.getTime() + ": " + fluxRecord.getMeasurement() + ": " +fluxRecord.getValueByKey("_value"));
+
+
+
+                    //gramsRaccio = [1.0],[1.0];
+                }
+            }
+        }
+        
+        
 
         influxDBClient.close();
         System.out.println("Dades llegides!");
@@ -143,4 +177,10 @@ public class Dades {
         Instant time;
         
     }
+
+    public boolean isDreta() {
+        return dreta;
+    }
+    
+    
 }

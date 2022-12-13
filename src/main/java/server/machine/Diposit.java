@@ -56,10 +56,6 @@ public class Diposit {
         return alertaDiposit;
     }
 
-    /*public boolean isDipositBuit() {
-        return dipositBuit;
-    }*/
-
     public static double getDIPOSIT_BUIT() {
         return DIPOSIT_BUIT;
     }
@@ -76,25 +72,27 @@ public class Diposit {
     
         //METODES
     public static Diposit addDiposit(){
-        Sensor sensorNivell = new Sensor().addSensor(TIPUS_SENSOR, 0);
+        Sensor sensorNivell = new Sensor().addSensor(TIPUS_SENSOR, 50);
         return new Diposit(sensorNivell,dreta);
     }
     
         //FUNCIONS
     public double getPercentatgeDiposit(){
-        double percentatge = ((DIPOSIT_BUIT - sensorNivell.getValor())/DIPOSIT_BUIT) *100;
+        double percentatge = ((DIPOSIT_PLE - sensorNivell.getValor())/DIPOSIT_PLE) *100;
         return percentatge; 
     }
     
     public void setAlertaDiposit(){
-        if(sensorNivell.getValor() > valorAlertaDiposit){
+        if(sensorNivell.getValor() < valorAlertaDiposit){
             this.alertaDiposit = true;
             //TODO   Activa la icona d'Alerta al Diposit
+        }else{
+            this.alertaDiposit = false;
         }
     }
         
     public Boolean estaBuit(){
-        if(sensorNivell.getValor() >= DIPOSIT_BUIT){
+        if(sensorNivell.getValor() <= DIPOSIT_BUIT){
             return true;
         }else{
            return false; 

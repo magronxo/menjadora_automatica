@@ -4,7 +4,6 @@
  */
 package gui.view;
 
-import gui.controller.Controlador_Principal;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JProgressBar;
@@ -15,13 +14,20 @@ import javax.swing.JProgressBar;
  */
 public class Pantalla_Principal extends javax.swing.JFrame {
 
-    private Pantalla_Configuracio confScreen; 
+    private Pantalla_Configuracio confScreen;
+    private Pantalla_Estadistiques chartScreenDreta;
+    private Pantalla_Estadistiques chartScreenEsquerra;
      
     public Pantalla_Principal() {
         initComponents();
     }
-    public Pantalla_Principal(Pantalla_Configuracio confScreen) {
+    public Pantalla_Principal(Pantalla_Configuracio confScreen, Pantalla_Estadistiques chartScreenDreta,Pantalla_Estadistiques chartScreenEsquerra) {
         this.confScreen=confScreen;
+        this.chartScreenDreta=chartScreenDreta;
+        this.chartScreenEsquerra=chartScreenEsquerra;
+        this.chartScreenDreta.setVisible(false);
+        this.chartScreenEsquerra.setVisible(false);
+        
         initComponents();
     }
 
@@ -121,6 +127,7 @@ public class Pantalla_Principal extends javax.swing.JFrame {
         blockMotorEsquerraIcon = new javax.swing.JLabel();
         blockMotorDretaIcon = new javax.swing.JLabel();
         boto_estadistiques = new javax.swing.JButton();
+        boto_estadistiques1 = new javax.swing.JButton();
         fonsPantalla = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -351,7 +358,7 @@ public class Pantalla_Principal extends javax.swing.JFrame {
                 boto_configuracioActionPerformed(evt);
             }
         });
-        jPanel1.add(boto_configuracio, new org.netbeans.lib.awtextra.AbsoluteConstraints(540, 550, 80, 70));
+        jPanel1.add(boto_configuracio, new org.netbeans.lib.awtextra.AbsoluteConstraints(480, 540, 80, 70));
 
         jLabel31.setFont(new java.awt.Font("Noto Mono", 1, 18)); // NOI18N
         jLabel31.setForeground(new java.awt.Color(51, 51, 255));
@@ -413,13 +420,23 @@ public class Pantalla_Principal extends javax.swing.JFrame {
 
         boto_estadistiques.setBackground(new java.awt.Color(102, 102, 102));
         boto_estadistiques.setIcon(new javax.swing.ImageIcon("C:\\Users\\oriol\\OneDrive\\Documents\\NetBeansProjects\\Servidor_Menjadora-master\\src\\main\\java\\gui\\view\\images\\appbar.graph.line.up.png")); // NOI18N
-        boto_estadistiques.setToolTipText("Consulta les estadístiques de la Màquina");
+        boto_estadistiques.setToolTipText("Consulta les estadístiques de la Menjadora Dreta");
         boto_estadistiques.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 boto_estadistiquesActionPerformed(evt);
             }
         });
-        jPanel1.add(boto_estadistiques, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 550, 80, 70));
+        jPanel1.add(boto_estadistiques, new org.netbeans.lib.awtextra.AbsoluteConstraints(600, 560, 80, 70));
+
+        boto_estadistiques1.setBackground(new java.awt.Color(102, 102, 102));
+        boto_estadistiques1.setIcon(new javax.swing.ImageIcon("C:\\Users\\oriol\\OneDrive\\Documents\\NetBeansProjects\\Servidor_Menjadora-master\\src\\main\\java\\gui\\view\\images\\appbar.graph.line.up.png")); // NOI18N
+        boto_estadistiques1.setToolTipText("Consulta les estadístiques de la Menjadora Esquerra");
+        boto_estadistiques1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                boto_estadistiques1ActionPerformed(evt);
+            }
+        });
+        jPanel1.add(boto_estadistiques1, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 560, 80, 70));
 
         fonsPantalla.setIcon(new javax.swing.ImageIcon("C:\\Users\\oriol\\OneDrive\\Documents\\NetBeansProjects\\Servidor_Menjadora-master\\src\\main\\java\\gui\\view\\images\\Ensamblatge54projecte.JPG")); // NOI18N
         fonsPantalla.setAlignmentY(0.0F);
@@ -439,7 +456,8 @@ public class Pantalla_Principal extends javax.swing.JFrame {
 
     private void raccioExtraDretaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_raccioExtraDretaActionPerformed
         // TODO add your handling code here:
-        confScreen.getConfControl().donaRaccioExtra(true,Integer.valueOf(confScreen.getRaccioExtraText().getText()));      
+        confScreen.getConfControl().donaRaccioExtra(true,Integer.valueOf(confScreen.getRaccioExtraText().getText()));
+        //raccioExtraDreta.setVisible(false);
     }//GEN-LAST:event_raccioExtraDretaActionPerformed
 
     private void raccioExtraEsquerraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_raccioExtraEsquerraActionPerformed
@@ -451,12 +469,17 @@ public class Pantalla_Principal extends javax.swing.JFrame {
         // TODO add your handling code here:
         confScreen.setVisible(true);
         confScreen.getConfControl().setejaPantallaConfiguracio();
-        //this.setVisible(false);
     }//GEN-LAST:event_boto_configuracioActionPerformed
 
     private void boto_estadistiquesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boto_estadistiquesActionPerformed
         // TODO add your handling code here:
+        chartScreenEsquerra.setVisible(true);
     }//GEN-LAST:event_boto_estadistiquesActionPerformed
+
+    private void boto_estadistiques1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boto_estadistiques1ActionPerformed
+        // TODO add your handling code here:
+        chartScreenDreta.setVisible(true);
+    }//GEN-LAST:event_boto_estadistiques1ActionPerformed
 
     //GETTERS   
     public JLabel getAcumulatGramsDreta() {
@@ -592,6 +615,7 @@ public class Pantalla_Principal extends javax.swing.JFrame {
     private javax.swing.JLabel blockMotorEsquerraIcon;
     public javax.swing.JButton boto_configuracio;
     public javax.swing.JButton boto_estadistiques;
+    public javax.swing.JButton boto_estadistiques1;
     public javax.swing.JLabel diaMesHoraPantalla;
     private javax.swing.JLabel fonsPantalla;
     public javax.swing.JLabel gramsPlatDreta;

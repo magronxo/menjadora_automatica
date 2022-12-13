@@ -7,6 +7,8 @@ package server;
 
 
 import java.util.ArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -27,6 +29,9 @@ public class Servidor_Menjadora {
     private static Maquina maquina;
     private static double horesExecucio;
     private static Simulador simulador;
+    
+    private static long initialTime = System.currentTimeMillis();
+    private static int diesSimulats = 0;
 
 
     //CONSTRUCTORS
@@ -45,39 +50,34 @@ public class Servidor_Menjadora {
         return horesExecucio;
     }
     
-    //-------   MAIN ---------
+    //-------   MAIN  ---------
     public static void main(String[] args) {
            
         ArrayList<Maquina> maquines = new ArrayList<Maquina>();
-        
-        
         maquina = new Maquina();
-        maquines.add(maquina.addMaquina(1));
-        horesExecucio = 0;
-        
-        simulador = new Simulador (maquina);
-        
-        
-        while(!sortirPrograma){
+        maquines.add(maquina.addMaquina(1, initialTime));
+        horesExecucio = 0;         
+
+        while(!sortirPrograma){  
             for (Maquina maquina : maquines){
                 maquina.funcionamentMaquina();
+                maquina.getControlador().sumaDia(diesSimulats);
                 horesExecucio = horesExecucio + HORES_PER_EXECUCIO;
                 maquina.getControlador().escriuValorsGui();
                 System.out.println("\n\tSon les "+ horesExecucio);
                 if(horesExecucio >= 24){
                     maquina.resetejaDia();
                     horesExecucio = 0;
+                    diesSimulats++;
+                    maquina.getControlador().sumaDia(diesSimulats);
                 }
             }
             try {
-                TimeUnit.SECONDS.sleep(6);//Important! Definim el temps entre execucions del programa     
-                
+                TimeUnit.SECONDS.sleep(3);//Important! Definim el temps entre execucions del programa
+
             } catch (InterruptedException ex) {
                 Logger.getLogger(Servidor_Menjadora.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        
     }
-
-
 }

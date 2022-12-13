@@ -18,8 +18,6 @@ import server.machine.Menjadora;
  */
 public class Mascota {
     
-    //public final static Scanner DADES = new Scanner(System.in);
-    
     //VARIABLES
     private String nom = "nom Mascota";
     private boolean dreta;
@@ -126,8 +124,6 @@ public class Mascota {
             this.pesMascota=pesMascota;
         }else{
             pesMascota = 4.0;
-        }
-        
+        }     
     }
-
 }

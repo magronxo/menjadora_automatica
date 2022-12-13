@@ -4,8 +4,11 @@
  */
 package server.machine.io;
 
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import server.Maquina;
-import server.machine.Mascota;
+import server.Servidor_Menjadora;
 import server.machine.io.Sensor;
 
 /**
@@ -13,7 +16,7 @@ import server.machine.io.Sensor;
  * @author oriol
  * Aquesta classe no crea cap objecte.
  */
-public class Simulador {
+public class Simulador{
     
     //VARIABLES
     public boolean dreta;
@@ -21,11 +24,17 @@ public class Simulador {
     public double sensorPlat_dreta = 20.1;
     public double sensorNivell_esquerra = 2;
     public double sensorNivell_dreta = 2;
+    private SimuladorMascota mascota1 = new SimuladorMascota(13.0, 4, true, "clyde");
+    private SimuladorMascota mascota2 = new SimuladorMascota(15.0, 5, false, "bonny");
+    
+    private Maquina maquina;
     
     //CONSTRUCTORS
-    public Simulador(Maquina maquina){
-        this.dreta=dreta;
-
+    public Simulador(double sensorPlat_esq, double sensorPlat_dret, double sensorNivell_esq, double sensorNivell_dreta){
+        this.sensorPlat_esquerra=sensorPlat_esq;
+        this.sensorPlat_dreta=sensorPlat_dret;
+        this.sensorNivell_esquerra=sensorNivell_esq;
+        this.sensorNivell_dreta=sensorNivell_dreta;
     }
     public Simulador(){
     }
@@ -78,28 +87,53 @@ public class Simulador {
             return sensorPlat_dreta;
         }
     }
-    
-    
-    
+
+    public SimuladorMascota getMascota1() {
+        return mascota1;
+    }
+
+    public SimuladorMascota getMascota2() {
+        return mascota2;
+    }
+
     //METODES
-    public static Simulador addSimulador(boolean dreta){
+    public static Simulador addSimulador(){
         return new Simulador();
     }
     
     //FUNCIONS
     public void startSimulacio(boolean sortirPrograma){
         while(!sortirPrograma){
-            simulaGat();
+            simulaMascotes();
             simulaHuma();
         }
     }
+
+    public void simulaMascotes(){
+        if(mascota1.isDreta()){
+            this.sensorPlat_dreta = mascota1.menja(this.sensorPlat_dreta);
+            this.sensorPlat_esquerra = mascota2.menja(this.sensorPlat_esquerra);
+        }else{
+            this.sensorPlat_esquerra = mascota1.menja(this.sensorPlat_esquerra);
+            this.sensorPlat_dreta = mascota2.menja(this.sensorPlat_dreta);
+        }
+       
+    }
     
-    public void simulaGat(){
-        
+    public Maquina getMaquina (){
+        return this.maquina;
+    }
+    public void setMaquina (Maquina maquina){
+        this.maquina = maquina;
     }
     
     public void simulaHuma(){
-        
+        try {
+                TimeUnit.SECONDS.sleep(6);//Important! Definim el temps entre execucions del programa     
+                
+            } catch (InterruptedException ex) {
+                Logger.getLogger(Servidor_Menjadora.class.getName()).log(Level.SEVERE, null, ex);
+            }
     }
     
     //Divideix el nombre de raccions entre 24 hores
@@ -107,36 +141,82 @@ public class Simulador {
         double tempsEntreRaccions = raccions / 24;
         
     }
+
+}
+
+class SimuladorMascota{
+        private double quantitatMenjada;
+        private int tempsMenjada;
+        private boolean dreta;
+        private String nomMascota;
+        
+        public SimuladorMascota(double quantitatMenjada, int tempsMenjada, boolean dreta, String nom){
+            this.quantitatMenjada = quantitatMenjada;
+            this.tempsMenjada = tempsMenjada;
+            this.dreta = dreta;
+            this.nomMascota = nom;
+        }
+
+        public double getQuantitatMenjada() {
+            return quantitatMenjada;
+        }
+
+        public int getTempsMenjada() {
+            return tempsMenjada;
+        }
+
+        public boolean isDreta() {
+            return dreta;
+        }
+
+        public String getNomMascota() {
+            return nomMascota;
+        }
+        
+
+        public void setQuantitatMenjada(double quantitatMenjada) {
+            this.quantitatMenjada = quantitatMenjada;
+        }
+
+        public void setTempsMenjada(int tempsMenjada) {
+            this.tempsMenjada = tempsMenjada;
+        }
+
+        public void setDreta(boolean dreta) {
+            this.dreta = dreta;
+        }
+
+        public void setNomMascota(String nomMascota) {
+            this.nomMascota = nomMascota;
+        }
+        
     
-    public void mascotaMenja(Sensor plat, String nomMascota){
-        int quantitatMenjada = 10;
-        if(plat.getValor() > 0){
-            if(plat.getValor() < quantitatMenjada){
-                System.out.println("La " + nomMascota +  " ha menjat " + plat.getValor() + " grams");
-                plat.setValorSimulador(0);
+        
+        public double menja(double menjarPlat){
+            if(menjarPlat > 0){
+                if(menjarPlat < quantitatMenjada){
+                    System.out.println("La " + nomMascota +  " ha menjat " + menjarPlat + " grams");
+                    menjarPlat=0;
+                }else{
+                    menjarPlat = menjarPlat - quantitatMenjada;
+                    System.out.println("La " + nomMascota +  " ha menjat " + quantitatMenjada + " grams");
+                }
             }else{
-                plat.setValorSimulador(plat.getValor() - quantitatMenjada);
-                System.out.println("La " + nomMascota +  " ha menjat " + quantitatMenjada + " grams");
+                System.out.println("Plat buit, la mascota " + nomMascota +  " no ha menjat!");
             }
-        }else{
-            System.out.println("Plat buit, la mascota " + nomMascota +  " no ha menjat!");
+            return menjarPlat;
         }
         
     }
+
+class SimuladorHuma{
     
-    public boolean carregaDiposit(boolean dreta){
-        if (dreta){
-            sensorNivell_dreta = 50;
-        }else if (!dreta){
-            sensorNivell_esquerra = 50;
-        }
-        return true;
+    private int tempsReaccio;
+
+    public void carregaDiposit(Maquina maquina){
+            maquina.getMenjadoraDreta().getDiposit().getSensorNivell().setValorSimulador(50);
+            maquina.getMenjadoraEsquerra().getDiposit().getSensorNivell().setValorSimulador(50);
+            
     }
-    
-    //TODO
-    //ajustar grams acumulats
-    //decrement del plat per fases
-    //ajustar decrement i emplenat del diposit
-    //Decimals grams/raccio
-    //Canvi de dia??? --> Guardar dia persistència -->InfluxDB
+
 }
