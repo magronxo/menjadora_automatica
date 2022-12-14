@@ -36,7 +36,7 @@ public class Controlador_Principal {
     //CONSTRUCTORS
     public Controlador_Principal(Pantalla_Principal principal,Controlador_Configuracio configuracio, Menjadora menjadoraDreta, Menjadora menjadoraEsquerra){
         this.principal=principal;
-        this.confControl=confControl;
+        //this.confControl=confControl;
         this.menjadoraDreta=menjadoraDreta;
         this.menjadoraEsquerra=menjadoraEsquerra;
         principal.setVisible(true);
@@ -49,13 +49,12 @@ public class Controlador_Principal {
     }
     
     //METODES
-    public static Controlador_Principal addControlador(Menjadora menjadoraDreta, Menjadora menjadoraEsquerra, Dades dadesDreta, Dades dadesEsquerra){
+    public static Controlador_Principal addControlador(Menjadora menjadoraDreta, Menjadora menjadoraEsquerra, Dades dades){
 
         Pantalla_Configuracio confScreen = new Pantalla_Configuracio();
-        Pantalla_Estadistiques chartScreenDreta = new Pantalla_Estadistiques(dadesDreta);
-        Pantalla_Estadistiques chartScreenEsquerra = new Pantalla_Estadistiques(dadesEsquerra);
+        Pantalla_Estadistiques chartScreen = new Pantalla_Estadistiques(dades);
         
-        Pantalla_Principal principal = new Pantalla_Principal(confScreen,chartScreenDreta,chartScreenEsquerra);
+        Pantalla_Principal principal = new Pantalla_Principal(confScreen,chartScreen);
         
         confControl = new Controlador_Configuracio();
         confControl.addControlador(confScreen, menjadoraDreta, menjadoraEsquerra);

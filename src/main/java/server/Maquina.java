@@ -27,7 +27,7 @@ public class Maquina{
     //private boolean dreta;
     private Mascota mascotaDreta, mascotaEsquerra;
     private Menjadora menjadoraDreta, menjadoraEsquerra;
-    private Dades dadesDreta, dadesEsquerra;
+    private Dades dades;
     private Controlador_Principal controlador;
     private Simulador simulador;
     
@@ -36,17 +36,16 @@ public class Maquina{
     //CONSTRUCTORS
     public Maquina(){    
     }
-    public Maquina(int id, Mascota mascotaDreta, Mascota mascotaEsquerra, Menjadora menjadoraDreta, Menjadora menjadoraEsquerra, Dades dadesDreta, Dades dadesEsquerra, Controlador_Principal controlador, long initialTime){
+    public Maquina(int id, Mascota mascotaDreta, Mascota mascotaEsquerra, Menjadora menjadoraDreta, Menjadora menjadoraEsquerra, Dades dades, Controlador_Principal controlador, long initialTime){
         this.id=id;
         this.mascotaDreta=mascotaDreta;
         this.mascotaEsquerra=mascotaEsquerra;
         this.menjadoraDreta=menjadoraDreta;
         this.menjadoraEsquerra=menjadoraEsquerra;
-        this.dadesDreta=dadesDreta;
-        this.dadesEsquerra=dadesEsquerra;
+        this.dades=dades;
         this.controlador=controlador;
         this.initialTime=initialTime;
-        this.simulador = new Simulador (this.menjadoraEsquerra.getSensorPlat().getValor(), this.menjadoraDreta.getSensorPlat().getValor(), this.menjadoraEsquerra.getDiposit().getSensorNivell().getValor(), this.menjadoraDreta.getDiposit().getSensorNivell().getValor());
+        this.simulador = new Simulador (this.menjadoraDreta,this.menjadoraEsquerra,this.menjadoraEsquerra.getSensorPlat().getValor(), this.menjadoraDreta.getSensorPlat().getValor(), this.menjadoraEsquerra.getDiposit().getSensorNivell().getValor(), this.menjadoraDreta.getDiposit().getSensorNivell().getValor());
     }
 
     public Menjadora getMenjadoraDreta() {
@@ -75,7 +74,7 @@ public class Maquina{
         
         Mascota mascotaDreta, mascotaEsquerra;
         Menjadora menjadoraDreta, menjadoraEsquerra;
-        Dades dadesDreta, dadesEsquerra;
+        Dades dades;
         Controlador_Principal controlador;
         
         mascotaDreta = Mascota.addMascota(true);        
@@ -87,62 +86,51 @@ public class Maquina{
         menjadoraDreta.setDosisDiaria(mascotaDreta.getGat(), mascotaDreta.getEdat(), mascotaDreta.getPesMascota());
         menjadoraEsquerra.setDosisDiaria(mascotaEsquerra.getGat(), mascotaEsquerra.getEdat(), mascotaEsquerra.getPesMascota());
 
-        dadesDreta = new Dades().addDades(menjadoraDreta);        
-        dadesEsquerra = new Dades().addDades(menjadoraEsquerra);
+        dades = new Dades();
 
         //Iniciem la Pantalla Principal
-        controlador = new Controlador_Principal().addControlador(menjadoraDreta, menjadoraEsquerra,dadesDreta,dadesEsquerra);
+        controlador = new Controlador_Principal().addControlador(menjadoraDreta,menjadoraEsquerra,dades);
 
-        return new Maquina(id, mascotaDreta, mascotaEsquerra, menjadoraDreta, menjadoraEsquerra, dadesDreta, dadesEsquerra, controlador, initialTime);
+        return new Maquina(id, mascotaDreta, mascotaEsquerra, menjadoraDreta, menjadoraEsquerra, dades, controlador, initialTime);
     }
     
 
     public void funcionamentMaquina(){
-
         menjadoraDreta.simulaFuncionament(initialTime);
         menjadoraEsquerra.simulaFuncionament(initialTime);
+
         simulador.setSensorPlat_dreta(menjadoraDreta.getSensorPlat().getValor());
         simulador.setSensorPlat_esquerra(menjadoraEsquerra.getSensorPlat().getValor());
         simulador.simulaMascotes();
+
         menjadoraDreta.getSensorPlat().setValorSimulador(simulador.getSensorPlat_dreta());
         menjadoraEsquerra.getSensorPlat().setValorSimulador(simulador.getSensorPlat_esquerra());
+
+        //ESCRIVIM DADES DE LA MENJADORA A INFLUX PER A CADA EXECUCIÓ DEL PROGRAMA (SIMULADOR)
+        dades.recordMenjadoraDreta("gramsAcumulatsAvui",menjadoraDreta.getGramsAcumulatAvui());
+        dades.recordMenjadoraEsquerra("gramsAcumulatsAvui",menjadoraEsquerra.getGramsAcumulatAvui());
+
+        dades.recordMenjadoraDreta("sensorPlat",menjadoraDreta.getSensorPlat().getValor());
+        dades.recordMenjadoraEsquerra("sensorPlat",menjadoraEsquerra.getSensorPlat().getValor());
         
+        dades.recordMenjadoraDreta("limitDiari",menjadoraDreta.getLimitDiari());
+        dades.recordMenjadoraEsquerra("limitDiari",menjadoraEsquerra.getLimitDiari());
+
+        dades.recordMenjadoraDreta("gramsRaccio",menjadoraDreta.getGramsRaccio());
+        dades.recordMenjadoraEsquerra("gramsRaccio",menjadoraEsquerra.getGramsRaccio());
+        
+        //DADES DIPOSIT
+        dades.recordMenjadoraDreta("sensorNivell",menjadoraDreta.getDiposit().getSensorNivell().getValor());
+        dades.recordMenjadoraEsquerra("sensorNivell",menjadoraEsquerra.getDiposit().getSensorNivell().getValor());
+        
+        dades.recordMenjadoraDreta("valorAlertaDiposit",menjadoraDreta.getDiposit().getValorAlertaDiposit());
+        dades.recordMenjadoraEsquerra("valorAlertaDiposit",menjadoraEsquerra.getDiposit().getValorAlertaDiposit());
+
+        dades.recordMenjadoraDreta("valorDipositBuit",menjadoraDreta.getDiposit().getDIPOSIT_BUIT());
+        dades.recordMenjadoraEsquerra("valorDipositBuit",menjadoraEsquerra.getDiposit().getDIPOSIT_BUIT());
+
     }
     public void resetejaDia(){
-        try{
-        //ESCRIVIM LES DADES DE LA MENJADORA
-        dadesDreta.recordMenjadoraDreta("limitDiari",menjadoraDreta.getLimitDiari());
-        dadesEsquerra.recordMenjadoraEsquerra("limitDiari",menjadoraEsquerra.getLimitDiari());
-        
-        //L'acumulat avui el voldria escriure cada execució 60s
-        //dadesDreta.recordMenjadoraDreta("gramsAcumulatsAvui",menjadoraDreta.getGramsAcumulatAvui());
-        dadesEsquerra.recordMenjadoraEsquerra("gramsAcumulatsAvui",menjadoraEsquerra.getGramsAcumulatAvui());
-
-        //dadesDreta.recordMenjadoraDreta("gramsRaccio",menjadoraDreta.getGramsRaccio());
-        //dadesEsquerra.recordMenjadoraEsquerra("gramsRaccio",menjadoraEsquerra.getGramsRaccio());
-        
-        //Sensor Plat el voldria escriure cada mitja execució (30s)
-        //dadesDreta.recordMenjadoraDreta("sensorPlat",menjadoraDreta.getSensorPlat().getValor());
-        //dadesEsquerra.recordMenjadoraEsquerra("sensorPlat",menjadoraEsquerra.getSensorPlat().getValor());
-        
-        //ESCRIVIM LES DADES DEL DIPOSIT
-        //dadesDreta.recordDipositDreta("sensorNivell",menjadoraDreta.getDiposit().getSensorNivell().getValor());
-        //dadesEsquerra.recordDipositEsquerra("sensorNivell",menjadoraEsquerra.getDiposit().getSensorNivell().getValor());
-        
-        //dadesDreta.recordDipositDreta("valorAlertaDiposit",menjadoraDreta.getDiposit().getValorAlertaDiposit());
-        //dadesEsquerra.recordDipositEsquerra("valorAlertaDiposit",menjadoraEsquerra.getDiposit().getValorAlertaDiposit());
-        
-        //dadesDreta.recordDipositDreta("valorDipositBuit",menjadoraDreta.getDiposit().getDIPOSIT_BUIT());
-        //dadesEsquerra.recordDipositEsquerra("valorDipositBuit",menjadoraEsquerra.getDiposit().getDIPOSIT_BUIT());
-        //dadesDreta.llegeixDadesMenjadora();
-        //dadesEsquerra.llegeixDadesMenjadora();
-        
-        //dadesDreta.llegeixDadesDiposit();
-        //dadesEsquerra.llegeixDadesDiposit();
-        }catch(Exception e){
-             System.out.println("Influx Error");     
-        }
-
         menjadoraDreta.resetejaDia();
         menjadoraEsquerra.resetejaDia();
 

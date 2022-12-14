@@ -78,7 +78,7 @@ public class Diposit {
     
         //FUNCIONS
     public double getPercentatgeDiposit(){
-        double percentatge = ((DIPOSIT_PLE - sensorNivell.getValor())/DIPOSIT_PLE) *100;
+        double percentatge = (sensorNivell.getValor()/DIPOSIT_PLE) *100;
         return percentatge; 
     }
     

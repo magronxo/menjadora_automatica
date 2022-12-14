@@ -15,18 +15,15 @@ import javax.swing.JProgressBar;
 public class Pantalla_Principal extends javax.swing.JFrame {
 
     private Pantalla_Configuracio confScreen;
-    private Pantalla_Estadistiques chartScreenDreta;
-    private Pantalla_Estadistiques chartScreenEsquerra;
+    private Pantalla_Estadistiques chartScreen;
      
     public Pantalla_Principal() {
         initComponents();
     }
-    public Pantalla_Principal(Pantalla_Configuracio confScreen, Pantalla_Estadistiques chartScreenDreta,Pantalla_Estadistiques chartScreenEsquerra) {
+    public Pantalla_Principal(Pantalla_Configuracio confScreen, Pantalla_Estadistiques chartScreen) {
         this.confScreen=confScreen;
-        this.chartScreenDreta=chartScreenDreta;
-        this.chartScreenEsquerra=chartScreenEsquerra;
-        this.chartScreenDreta.setVisible(false);
-        this.chartScreenEsquerra.setVisible(false);
+        this.chartScreen=chartScreen;
+        this.chartScreen.setVisible(false);
         
         initComponents();
     }
@@ -473,12 +470,15 @@ public class Pantalla_Principal extends javax.swing.JFrame {
 
     private void boto_estadistiquesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boto_estadistiquesActionPerformed
         // TODO add your handling code here:
-        chartScreenEsquerra.setVisible(true);
+        chartScreen.creaGrafica(true);
+        chartScreen.setVisible(true);
+        
     }//GEN-LAST:event_boto_estadistiquesActionPerformed
 
     private void boto_estadistiques1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_boto_estadistiques1ActionPerformed
         // TODO add your handling code here:
-        chartScreenDreta.setVisible(true);
+        chartScreen.creaGrafica(false);
+        chartScreen.setVisible(true);
     }//GEN-LAST:event_boto_estadistiques1ActionPerformed
 
     //GETTERS   

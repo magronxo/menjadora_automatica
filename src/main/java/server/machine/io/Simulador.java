@@ -9,7 +9,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import server.Maquina;
 import server.Servidor_Menjadora;
-import server.machine.io.Sensor;
+import server.machine.Menjadora;
 
 /**
  *
@@ -24,17 +24,26 @@ public class Simulador{
     public double sensorPlat_dreta = 20.1;
     public double sensorNivell_esquerra = 2;
     public double sensorNivell_dreta = 2;
-    private SimuladorMascota mascota1 = new SimuladorMascota(13.0, 4, true, "clyde");
-    private SimuladorMascota mascota2 = new SimuladorMascota(15.0, 5, false, "bonny");
+    //private SimuladorMascota mascota1 = new SimuladorMascota(13.0, 4, true, "clyde");
+    //private SimuladorMascota mascota2 = new SimuladorMascota(15.0, 5, false, "bonny");
+    
+    private SimuladorMascota mascota1;
+    private SimuladorMascota mascota2;
+    
+    private Menjadora menjadoraDreta, menjadoraEsquerra;
     
     private Maquina maquina;
     
     //CONSTRUCTORS
-    public Simulador(double sensorPlat_esq, double sensorPlat_dret, double sensorNivell_esq, double sensorNivell_dreta){
+    public Simulador(Menjadora menjadoraDreta,Menjadora menjadoraEsquerra,double sensorPlat_esq, double sensorPlat_dret, double sensorNivell_esq, double sensorNivell_dreta){
         this.sensorPlat_esquerra=sensorPlat_esq;
         this.sensorPlat_dreta=sensorPlat_dret;
         this.sensorNivell_esquerra=sensorNivell_esq;
         this.sensorNivell_dreta=sensorNivell_dreta;
+        this.menjadoraDreta=menjadoraDreta;
+        this.menjadoraEsquerra=menjadoraEsquerra;
+        mascota1 = new SimuladorMascota(menjadoraDreta.getGramsRaccio()/1.5, 5, true,menjadoraDreta.getMascota().getNom());
+        mascota2 = new SimuladorMascota(menjadoraEsquerra.getGramsRaccio()/1.6+1, 5, false,menjadoraEsquerra.getMascota().getNom());
     }
     public Simulador(){
     }

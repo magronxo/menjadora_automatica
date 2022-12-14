@@ -7,8 +7,6 @@ package server;
 
 
 import java.util.ArrayList;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -73,7 +71,7 @@ public class Servidor_Menjadora {
                 }
             }
             try {
-                TimeUnit.SECONDS.sleep(3);//Important! Definim el temps entre execucions del programa
+                TimeUnit.SECONDS.sleep(5);//Important! Definim el temps entre execucions del programa
 
             } catch (InterruptedException ex) {
                 Logger.getLogger(Servidor_Menjadora.class.getName()).log(Level.SEVERE, null, ex);
