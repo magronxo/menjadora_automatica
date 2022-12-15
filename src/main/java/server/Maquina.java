@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package server;
 
 import gui.controller.Controlador_Principal;
@@ -12,19 +8,15 @@ import server.machine.io.Simulador;
 
 
 /**
- *
- * @author oriol
- * 
  * Classe que crea la Maquina. És cridat per Servidor_Menjadora.
  * Reb el id del Servidor_Menjadora.
- * Retorna una Màquina amb dues Mascotes i dues Menjadores.
- * L'atribut raccioExtra és comú per a tota la Maquina.
+ * Retorna una Màquina amb dues Mascotes i dues Menjadores, Dades i Controladors amb Pantalles.
+ * @author Oriol Coll Salvia
  */
 public class Maquina{
     
     //VARIABLES
     private int id;
-    //private boolean dreta;
     private Mascota mascotaDreta, mascotaEsquerra;
     private Menjadora menjadoraDreta, menjadoraEsquerra;
     private Dades dades;
@@ -34,8 +26,17 @@ public class Maquina{
     private static long initialTime;
     
     //CONSTRUCTORS
-    public Maquina(){    
-    }
+    /**
+     * Construeix una Maquina amb:
+     * @param id
+     * @param mascotaDreta les Mascotes
+     * @param mascotaEsquerra
+     * @param menjadoraDreta les Menjadores amb el seu Diposit
+     * @param menjadoraEsquerra
+     * @param dades una instància de Dades
+     * @param controlador el Controlador que conté totes les Pantalles
+     * @param initialTime el temps d'inici de funcionament
+     */
     public Maquina(int id, Mascota mascotaDreta, Mascota mascotaEsquerra, Menjadora menjadoraDreta, Menjadora menjadoraEsquerra, Dades dades, Controlador_Principal controlador, long initialTime){
         this.id=id;
         this.mascotaDreta=mascotaDreta;
@@ -47,29 +48,17 @@ public class Maquina{
         this.initialTime=initialTime;
         this.simulador = new Simulador (this.menjadoraDreta,this.menjadoraEsquerra,this.menjadoraEsquerra.getSensorPlat().getValor(), this.menjadoraDreta.getSensorPlat().getValor(), this.menjadoraEsquerra.getDiposit().getSensorNivell().getValor(), this.menjadoraDreta.getDiposit().getSensorNivell().getValor());
     }
-
-    public Menjadora getMenjadoraDreta() {
-        return menjadoraDreta;
-        
-    }
-
-    public Menjadora getMenjadoraEsquerra() {
-        return menjadoraEsquerra;
+    public Maquina(){    
     }
     
-    
-    //ACCESSORS
-    public void setRaccioExtra(int raccioExtra) {
-        //Pantalla Principal permet canviar aquest paràmetre
-        raccioExtra = raccioExtra;
-    }
-
-    public Controlador_Principal getControlador() {
-        return controlador;
-    }
-    
-
     //METODES
+    
+    /**
+     * Afegeix una Maquina
+     * @param id
+     * @param initialTime
+     * @return una nova Maquina completa amb tots els seus objectes
+     */
     public static Maquina addMaquina(int id, long initialTime){
         
         Mascota mascotaDreta, mascotaEsquerra;
@@ -94,7 +83,11 @@ public class Maquina{
         return new Maquina(id, mascotaDreta, mascotaEsquerra, menjadoraDreta, menjadoraEsquerra, dades, controlador, initialTime);
     }
     
-
+    /**
+     * Per a cada execució del programa:
+     * Crida el metode simula per a cada Menjadora i Mascota.
+     * Escriu les dades de la Menjadora a Influx i també als arrays d'estadísitiques
+     */
     public void funcionamentMaquina(){
         menjadoraDreta.simulaFuncionament(initialTime);
         menjadoraEsquerra.simulaFuncionament(initialTime);
@@ -128,8 +121,11 @@ public class Maquina{
 
         dades.recordMenjadoraDreta("valorDipositBuit",menjadoraDreta.getDiposit().getDIPOSIT_BUIT());
         dades.recordMenjadoraEsquerra("valorDipositBuit",menjadoraEsquerra.getDiposit().getDIPOSIT_BUIT());
-
     }
+    
+    /**
+     * En acabar el dia, crida les funcions resetejaDia de les Menjadores que posen els Acumulats a 0 i desbloquen el motor.
+     */
     public void resetejaDia(){
         menjadoraDreta.resetejaDia();
         menjadoraEsquerra.resetejaDia();
@@ -142,4 +138,19 @@ public class Maquina{
             menjadoraEsquerra.getMotorMenjadora().desblocaRele();
         }
     }
+    
+    //ACCESSORS
+    public Controlador_Principal getControlador() {
+        return controlador;
+    }
+    
+    public Menjadora getMenjadoraDreta() {
+        return menjadoraDreta;
+        
+    }
+
+    public Menjadora getMenjadoraEsquerra() {
+        return menjadoraEsquerra;
+    }
+   
 }

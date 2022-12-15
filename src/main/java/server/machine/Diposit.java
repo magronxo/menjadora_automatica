@@ -1,16 +1,10 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package server.machine;
 import server.machine.io.Sensor;
 
 /**
- *
- * @author oriol
  * Classe que crea un Diposit. És cridat per Menjadora.
- * Reb el id de la Menjadora.
  * Retorna a la Menjadora un Diposit amb el seu Sensor de nivell.
+ * @author Oriol Coll Salvia
  */
 public class Diposit {
     
@@ -26,17 +20,78 @@ public class Diposit {
     private boolean alertaDiposit, dipositBuit;
     
     //CONSTRUCTORS
+    /**
+     * Construeix el Diposit
+     * @param sensorNivell sensor de distància del pinso [double]
+     * @param dreta booleà posició Menjadora
+     */
     public Diposit(Sensor sensorNivell, boolean dreta){
         this.sensorNivell=sensorNivell;
         this.dreta=dreta;
     }
     public Diposit(){
     }
-    
-    //ACCESSORS
-    public boolean isDreta(){
-        return dreta;
+ 
+    //METODES
+    /**
+     * Afegeix un Diposit
+     * @return un nou diposit amb la seva posicio i el seu Sensor de nivell
+     */
+    public static Diposit addDiposit(){
+        Sensor sensorNivell = new Sensor().addSensor(TIPUS_SENSOR, 50);
+        return new Diposit(sensorNivell,dreta);
     }
+    
+    //FUNCIONS
+    /**
+     * Calcula el percentatge del Diposit
+     * @return percentatge restant del contingut del Diposit
+     */
+    public double getPercentatgeDiposit(){
+        double percentatge = (sensorNivell.getValor()/DIPOSIT_PLE) *100;
+        return percentatge; 
+    }
+    
+    /**
+     * Activa o desactiva el booleà d'Alerta quan el nivell de pinso està per sota d'aquest
+     */
+    public void setAlertaDiposit(){
+        if(sensorNivell.getValor() < valorAlertaDiposit){
+            this.alertaDiposit = true;
+        }else{
+            this.alertaDiposit = false;
+        }
+    }
+    /**
+     * Comprova si el sensor del Diposit està per sota del mínim
+     * @return si el Diposit està buit o no
+     */    
+    public Boolean estaBuit(){
+        if(sensorNivell.getValor() <= DIPOSIT_BUIT){
+            return true;
+        }else{
+           return false; 
+        }
+    }
+
+    //ACCESSORS
+    
+     /**
+     * Re-assigna el valor en que s'alertarà per nivell de pinso baix.
+     * Controla que el valor estigui dins del rang.
+     * @param valorAlertaDiposit [integer]
+     */
+    public void setValorAlertaDiposit(double valorAlertaDiposit) {
+        if(valorAlertaDiposit > 15 && valorAlertaDiposit < 40){
+            this.valorAlertaDiposit = valorAlertaDiposit;
+        }else{
+            valorAlertaDiposit = 20;
+        }
+    }
+    
+    /**
+     * @return si és dreta o esquerra en text
+     */
     public String stringDreta(){
        if(dreta){
            return "dreta";
@@ -44,6 +99,10 @@ public class Diposit {
            return "esquerra";
        
     }
+    public boolean isDreta(){
+        return dreta;
+    }
+
     public Sensor getSensorNivell() {
         return sensorNivell;
     }
@@ -58,54 +117,5 @@ public class Diposit {
 
     public static double getDIPOSIT_BUIT() {
         return DIPOSIT_BUIT;
-    }
-    
-    
-    public void setValorAlertaDiposit(double valorAlertaDiposit) {
-        if(valorAlertaDiposit > 15 && valorAlertaDiposit < 40){
-            this.valorAlertaDiposit = valorAlertaDiposit;
-        }else{
-            valorAlertaDiposit = 20;
-        }
-    }
-    
-    
-        //METODES
-    public static Diposit addDiposit(){
-        Sensor sensorNivell = new Sensor().addSensor(TIPUS_SENSOR, 50);
-        return new Diposit(sensorNivell,dreta);
-    }
-    
-        //FUNCIONS
-    public double getPercentatgeDiposit(){
-        double percentatge = (sensorNivell.getValor()/DIPOSIT_PLE) *100;
-        return percentatge; 
-    }
-    
-    public void setAlertaDiposit(){
-        if(sensorNivell.getValor() < valorAlertaDiposit){
-            this.alertaDiposit = true;
-            //TODO   Activa la icona d'Alerta al Diposit
-        }else{
-            this.alertaDiposit = false;
-        }
-    }
-        
-    public Boolean estaBuit(){
-        if(sensorNivell.getValor() <= DIPOSIT_BUIT){
-            return true;
-        }else{
-           return false; 
-        }
-    }
-
-    /*public void comprovaDiposit(){
-        if(sensorNivell.getValor() < valorAlertaDiposit){
-            this.alertaDiposit = true;
-        }
-        if(sensorNivell.getValor() <= DIPOSIT_BUIT){
-            dipositBuit = true;
-        }
-    }*/
-    
+    } 
 }

@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package gui.controller;
 
 import gui.view.Pantalla_Configuracio;
@@ -22,8 +18,8 @@ import server.data.Dades;
 
 
 /**
- *
- * @author oriol
+ * Controlador de la Pantalla Principal
+ * @author Oriol Coll Salvia
  */
 public class Controlador_Principal {
     
@@ -34,6 +30,13 @@ public class Controlador_Principal {
     private Calendar cal;
     
     //CONSTRUCTORS
+    /**
+     * Construeix el Controlador Principal amb:
+     * @param principal la Pantalla Principal
+     * @param configuracio el Controlador Configuracio
+     * @param menjadoraDreta i les Menjadores
+     * @param menjadoraEsquerra 
+     */
     public Controlador_Principal(Pantalla_Principal principal,Controlador_Configuracio configuracio, Menjadora menjadoraDreta, Menjadora menjadoraEsquerra){
         this.principal=principal;
         //this.confControl=confControl;
@@ -49,6 +52,13 @@ public class Controlador_Principal {
     }
     
     //METODES
+    /**
+     * Afegeix el Controlador Principal amb: 
+     * @param menjadoraDreta les seves Menjadores
+     * @param menjadoraEsquerra
+     * @param dades i una instància de la Classe Dades per als botons de les gràfiques
+     * @return un nou Controlador Principal
+     */
     public static Controlador_Principal addControlador(Menjadora menjadoraDreta, Menjadora menjadoraEsquerra, Dades dades){
 
         Pantalla_Configuracio confScreen = new Pantalla_Configuracio();
@@ -63,6 +73,10 @@ public class Controlador_Principal {
     }
 
     //FUNCIONS
+    /**
+     * És cridada pel funcionament/simulació (classe Maquina).
+     * Actualitza els valors dinàmics de la GUI en cada execució.
+     */
     public void escriuValorsGui (){
         
         //Nivell alerta esta amagat
@@ -158,8 +172,12 @@ public class Controlador_Principal {
             return;
         }
     }
+    /**
+     * Suma un dia a la data en acabar el dia Simulat.
+     * Funció de Simulació.
+     * @param diesSimulats dies acumulats (simulats) desde la primera execució [integer]
+     */
     public void sumaDia(int diesSimulats){
-        //int i=1;
         if(diesSimulats==0){
             this.principal.getDiaMesHoraPantalla().setText(retornaDia());
         }else{
@@ -171,9 +189,12 @@ public class Controlador_Principal {
             String diaSumat = sdf.format(cal.getTime());
             this.principal.getDiaMesHoraPantalla().setText(diaSumat);
         }
-        
     }
 
+    /**
+     * Captura la data actual per a l'inici del funcionament/simulació
+     * @return la data completa actual en format Català
+     */
     public String retornaDia(){
         Calendar cal = Calendar.getInstance();  
         SimpleDateFormat sdf = new SimpleDateFormat("EEEEEEEEE,dd-MM-yyyy", new Locale ("ca","CA"));  

@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package gui.controller;
 
 import gui.view.Pantalla_Principal;
@@ -19,10 +15,6 @@ import java.util.Date;
 import java.util.Calendar;
 
 
-/**
- *
- * @author oriol
- */
 public class Controlador_Reader implements ActionListener {
 
     private Pantalla_Principal principal = new Pantalla_Principal();

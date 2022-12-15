@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package server.data;
 
 import java.time.Instant;
@@ -17,16 +14,20 @@ import com.influxdb.query.FluxTable;
 import server.machine.Menjadora;
 
 /**
- *
- * @author oriol
+ * Classe que injecta les dades a InfluxDB. (dada+Timestamp)
+ * També guarda aquestes dades en arrays per a consultar-los i generar les gràfiques a la Pantalla Estadístiques.
+ * La part del query a InfluxDB ha estat deshabilitada. Dificulta molt la generació de gràfiques correctament.
+ * @author Oriol Coll Salvia
  */
 public class Dades {
     
     public boolean dreta;
     private Menjadora menjadora;
     
-    private int resultats = 72;//168
+    //Mida dels arrays per a les estadístiques
+    private int resultats = 72; //Mostrem 72 hores simulades a la gràfica
     
+    //Arrays per a les estadístiques
     private double[] gramsRaccio = new double[resultats];
     private double[] limitDiari = new double[resultats];
     private double[] gramsAcumulatsAvui = new double[resultats];
@@ -43,10 +44,11 @@ public class Dades {
     private double[] valorAlertaDipositE = new double[resultats];
     private double[] valorDipositBuitE = new double[resultats];
  
-    
+    //Index dels arrays per a les estadístiques
     int a=0;int b=0;int c=0;int d=0;int e=0;int f=0;int g=0;
     int h=0;int i=0;int j=0;int k=0;int l=0;int m=0;int n=0;
 
+    //Paràmetres Connexió InfluxDB
     private static char[] token = "k2109pBJ6Liiw96bDjsNyiq_40eX0M94B5UnR5xxs9C35ihn6Eu64SlTwGOV95ne9LCD8lb1oZi0rTZBpOQUgw==".toCharArray();
     private static String org = "CollSalvia";
     private static String bucketDreta = "dreta";
@@ -56,24 +58,32 @@ public class Dades {
     //PASSWORD: bitnami123
     
     //CONSTRUCTORS
+    
+    /**
+     * Construeix l'objecte Dades
+     * @param menjadora li passa una Menjadora
+     */
     public Dades(Menjadora menjadora){
         this.menjadora=menjadora;
     }
     public Dades(){
-        
     }
     public Dades(boolean dreta){
         this.dreta=dreta;
-
     }
 
     //FUNCIONS
     
     //WRITE
+    
+    /**
+     * Reb una dada amb el seu nom i valor.
+     * La puja a InfluxDB al bucket dreta i la col·loca al seu array
+     * @param nomDada text
+     * @param valor [double]
+     */
     public void recordMenjadoraDreta(String nomDada, double valor){
-        
-        //GUARDEM LES DADES DE LA SIMULACIÓ. ALGUNES CADA EXECUCIÓ I LES ALTRES EN FINALITZAR EL DIA
-        
+
         //PUJEM LA DADA A INFLUXDB
         try{
             InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:8086", token, org, bucketDreta);
@@ -150,6 +160,12 @@ public class Dades {
         }
     }
     
+     /**
+     * Reb una dada amb el seu nom i valor.
+     * La puja a InfluxDB al bucket esquerra i la col·loca al seu array
+     * @param nomDada text
+     * @param valor [double]
+     */
     public void recordMenjadoraEsquerra(String nomDada, double valor){
         try{
             InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:8086", token, org, bucketEsquerra);
@@ -225,6 +241,12 @@ public class Dades {
         }
     }
     
+    /**
+     * Afegeix un valor al final d'un array ple.
+     * Fa córrer tots els valors avall esborrant el primer.
+     * @param arr array a tractar
+     * @param valor a afegir
+     */
     private void pushPopArray(double[]arr,double valor){
         for(int i=0;i<arr.length-1;i++){
             arr[i]= arr[i+1];
@@ -233,8 +255,16 @@ public class Dades {
     }
     
     //READ
+    /**
+     * És cridat quan es prem el botó Estadístiques.
+     * Retorna els arrays per crear les gràfiques
+     * @param dreta booleà per crear gràfiques de la dreta o de l'esquerra
+     * @param mesura nom de la mesura que volem graficar
+     * @return l'array escollit amb els valors per a fer la grafica
+     */
     public double[] llegeixDades(boolean dreta, String mesura){
     
+        
         double[] resultatLlegit = new double[resultats];
                 
         if(dreta){
@@ -296,7 +326,7 @@ public class Dades {
         return resultatLlegit;           
               
         
-         //AJUSTAR EL RANGE A LA ULTIMA SETMANA = 4 SEGONS * 24H * 7 DIES = 672. Els ultims 672 segons
+        //AJUSTAR EL RANGE A LA ULTIMA SETMANA = 4 SEGONS * 24H * 7 DIES = 672. Els ultims 672 segons
         //5 SEGONS * 24H * 7 DIES = 840.
         // * 6 = 1008 segons
         
@@ -394,6 +424,10 @@ public class Dades {
     //ACCESSORS
     public boolean isDreta() {
         return dreta;
+    }
+
+    public int getResultats() {
+        return resultats;
     }
     
     

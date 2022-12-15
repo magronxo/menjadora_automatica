@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package gui.view;
 
 import gui.controller.Controlador_Configuracio;
@@ -11,13 +7,16 @@ import javax.swing.JTextField;
 
 
 /**
- *
- * @author oriol
+ * Pantalla Configuració que permet modificar els valors de les Mascotes i Menjadores
+ * @author Oriol Coll Salvia
  */
 public class Pantalla_Configuracio extends javax.swing.JFrame {
 
     private Controlador_Configuracio confControl = new Controlador_Configuracio();
     
+    /**
+     * Construeix la Pantalla Configuració i n'inicia els components
+     */
     public Pantalla_Configuracio() {
         initComponents();
     }
@@ -509,9 +508,6 @@ public class Pantalla_Configuracio extends javax.swing.JFrame {
         dispose();
     }//GEN-LAST:event_botoValidarActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
@@ -544,7 +540,6 @@ public class Pantalla_Configuracio extends javax.swing.JFrame {
         });
     }
     //ACCESSORS
-
     public void setLimitDiariDretaText(JTextField limitDiariDretaText) {
         this.limitDiariDretaText = limitDiariDretaText;
     }

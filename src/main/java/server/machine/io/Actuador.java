@@ -1,15 +1,9 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package server.machine.io;
 
 /**
- *
- * @author oriol
  * Classe que crea els Motors. És cridat per Menjadora.
- * Reb el id de la Menjadora.
- * Retorna a la Menjadora un Motor amb el seu interruptor.
+ * Retorna a la Menjadora un Motor.
+ * @author Oriol Coll Salvia
  */
 public class Actuador {
     
@@ -31,26 +25,39 @@ public class Actuador {
     }
 
     //METODES
+    /**
+     * Afegeix un Motor
+     * @return un nou Motor
+     */
     public static Actuador addMotor() {
         return new Actuador();
     }
     
     
     //FUNCIONS
+    /**
+     * Activa el Motor si no esta bloquejat
+     */
     public void activaRele(){
         if(!block){
             this.interruptor = true;
         }
     }
-    
+    /**
+     * Desactiva el Motor posant el seu interruptor a false
+     */
     public void desactivaRele(){
         this.interruptor = false;
     }
-    
+    /**
+     * Bloca el Motor si no hi ha pinso o està la Menjadora desactivada
+     */
     public void blocaRele(){
         block = true;
     }
-        
+    /**
+     * Desbloca el Motor per permetre la activació
+     */    
     public void desblocaRele(){
         block = false;
     }    

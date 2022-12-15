@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package gui.view;
 
 import javax.swing.JButton;
@@ -9,8 +5,8 @@ import javax.swing.JLabel;
 import javax.swing.JProgressBar;
 
 /**
- *
- * @author oriol
+ * Pantalla Principal de la GUI.
+ * @author Oriol Coll Salvia
  */
 public class Pantalla_Principal extends javax.swing.JFrame {
 
@@ -20,6 +16,12 @@ public class Pantalla_Principal extends javax.swing.JFrame {
     public Pantalla_Principal() {
         initComponents();
     }
+    
+    /**
+     * Construeix la Pantalla Principal
+     * @param confScreen amb la seva Pantalla Configuració
+     * @param chartScreen i la seva Pantalla d'Estadístiques
+     */
     public Pantalla_Principal(Pantalla_Configuracio confScreen, Pantalla_Estadistiques chartScreen) {
         this.confScreen=confScreen;
         this.chartScreen=chartScreen;
@@ -28,12 +30,7 @@ public class Pantalla_Principal extends javax.swing.JFrame {
         initComponents();
     }
 
-    /**
-     * @param args the command line arguments
-     * 
-     */
     public static void main(String args[]) {
-
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -61,16 +58,10 @@ public class Pantalla_Principal extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Pantalla_Principal().setVisible(true);
-                
-                
+                new Pantalla_Principal().setVisible(true);  
             }
-        });        
-        
+        });               
     }
-
-
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always

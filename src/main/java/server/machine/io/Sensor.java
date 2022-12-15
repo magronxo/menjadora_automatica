@@ -1,18 +1,14 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package server.machine.io;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 /**
- *
- * @author oriol
  * Classe que crea un Sensor. És cridat per Menjadora i Diposit.
  * Reb el id de la Menjadora/Diposit i el tipus de Sensor.
  * Retorna un Sensor amb el seu Valor.
+ * @author Oriol Coll Salvia
+ * 
  */
 public class Sensor {
     
@@ -22,10 +18,13 @@ public class Sensor {
     private int tipus;//Sensor de nivell o Sensor de pes del plat
     private double valor;
 
-
-    
-    
+   
     //CONSTRUCTORS
+    /**
+     * Construeix un Sensor 
+     * @param tipus de Sensor (pes o distància)
+     * @param valor del Sensor
+     */
     public Sensor(int tipus, double valor){
         this.tipus=tipus;
         this.valor=valor;
@@ -34,7 +33,6 @@ public class Sensor {
     }
     
     //ACCESSORS
-    
     public double getValor() {
         valor = new BigDecimal(valor).setScale(2, RoundingMode.HALF_UP).doubleValue();
         return valor;
@@ -43,6 +41,12 @@ public class Sensor {
         this.valor = valor;
     } 
     //METODES
+    /**
+     * Afegeix un Sensor
+     * @param tipus de Sensor (pes o distància)
+     * @param valor del Sensor
+     * @return un nou Sensor
+     */
     public static Sensor addSensor(int tipus, double valor){
         return new Sensor(tipus, valor);
     }

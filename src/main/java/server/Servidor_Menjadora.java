@@ -1,8 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Project/Maven2/JavaApp/src/main/java/${packagePath}/${mainClassName}.java to edit this template
- */
-
 package server;
 
 
@@ -13,11 +8,9 @@ import java.util.logging.Logger;
 import server.machine.io.Simulador;
 
 /**
- *
- * @author oriol
- * 
- * 
- * Crea les Maquines passant-li el id
+ * Classe Primera amb el mètode Main.
+ * Classe que crea les Maquines que contindran les Menjadores i les Mascotes.
+ * @author Oriol Coll Salvia
  */
 public class Servidor_Menjadora {
     
@@ -30,25 +23,30 @@ public class Servidor_Menjadora {
     
     private static long initialTime = System.currentTimeMillis();
     private static int diesSimulats = 0;
+    
+    //VARIABLES DE SIMULACIO
+    private static int tempsEntreExecucions= 5; //Important! Definim el temps entre execucions del programa
 
 
     //CONSTRUCTORS
+    /**
+     * Construeix el Servidor de les Maquines
+     * @param id identificador del Servidor
+     */
     public Servidor_Menjadora(int id){
         this.id=id;
     }
     public Servidor_Menjadora(){
     }
     
-    //ACCESSORS
-    public static Maquina getMaquina() {
-        return maquina;
-    }
-
-    public static double getHoresExecucio() {
-        return horesExecucio;
-    }
-    
     //-------   MAIN  ---------
+    
+    /**
+     * Inicialitza la Maquina amb tots els seus elements.
+     * Definim els temps d'execució i executem el funcionament/simulació.
+     * Simulem les hores i fem passar els dies.
+     * @param args 
+     */
     public static void main(String[] args) {
            
         ArrayList<Maquina> maquines = new ArrayList<Maquina>();
@@ -71,11 +69,21 @@ public class Servidor_Menjadora {
                 }
             }
             try {
-                TimeUnit.SECONDS.sleep(5);//Important! Definim el temps entre execucions del programa
+                TimeUnit.SECONDS.sleep(tempsEntreExecucions);//Important! Definim el temps entre execucions del programa
 
             } catch (InterruptedException ex) {
                 Logger.getLogger(Servidor_Menjadora.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
+    
+    //ACCESSORS
+    public static Maquina getMaquina() {
+        return maquina;
+    }
+
+    public static double getHoresExecucio() {
+        return horesExecucio;
+    }
+    
 }

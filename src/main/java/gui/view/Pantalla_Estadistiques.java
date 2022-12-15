@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package gui.view;
 
 import java.awt.BasicStroke;
@@ -27,8 +23,8 @@ import org.jfree.data.xy.XYSeriesCollection;
 import server.data.Dades;
 
 /**
- *
- * @author oriol
+ * Pantalla Estadístiques que crea i mostra les Gràfiques
+ * @author Oriol Coll Salvia
  */
 
 public class Pantalla_Estadistiques extends JFrame{
@@ -38,19 +34,26 @@ public class Pantalla_Estadistiques extends JFrame{
     private JPanel inferior = new JPanel();
     private JPanel superior = new JPanel();
     
-    
     private double[] gramsRaccio,limitDiari,gramsAcumulatsAvui,sensorPlat,sensorNivell,valorAlertaDiposit,valorDipositBuit;
     
     private Dades dades;
     private boolean dreta;
     private String nomGrafica = "";
-    private int resultats = 72;//168
+    private int resultats; //Mostrem 72 hores simulades a la gràfica
+    private double dies = 3;
     
+    /**
+     * Construeix la Pantalla Estadístiques passant-li les dades
+     * Divideix el JFrame en dos panells per a les Gràfiques
+     * @param dades instància de la Classe Dades
+     */
     public Pantalla_Estadistiques(Dades dades){
         this.dades=dades;
         this.setSize(width, height);
         this.setVisible(true);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        this.resultats = dades.getResultats();
+        this.dies = resultats / 24;
 
         inferior.setSize(450, 750);
         inferior.setVisible(true);
@@ -67,10 +70,12 @@ public class Pantalla_Estadistiques extends JFrame{
         splitPane.setRightComponent(inferior);
 
         this.add(splitPane);
-        if(!this.isActive()){
-        }
     }
     
+    /**
+     * Assigna les Gràfiques a cada panell.
+     * Les esborra i les crea novament per a pintar-les actualitzades.
+     */
     private void initUI() {
         inferior.removeAll();
         inferior.revalidate();
@@ -101,7 +106,13 @@ public class Pantalla_Estadistiques extends JFrame{
         chartPanelDiposit.setBorder(BorderFactory.createEmptyBorder(0, 0, 400, 0));
  
         //JPANEL
-        setTitle("Estadística Setmanal. Menjadora i Dipòsit");
+        if(dreta){
+            setTitle("Menjadora Dreta. Últims "+dies+ " dies");
+        }else if(!dreta){
+            setTitle("Menjadora Esquerra. Últims "+dies+ " dies");
+        }else{
+            System.out.println("Menjadora: parametres incorrectes");  
+        }
         setLocationRelativeTo(null);
         setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
         
@@ -113,16 +124,11 @@ public class Pantalla_Estadistiques extends JFrame{
         superior.add(chartPanelDiposit);
         superior.repaint();
     }
-    /*private void refreshCharts() {
-        inferior.removeAll();
-        inferior.revalidate(); // This removes the old chart 
-        aChart = createChart(); 
-        aChart.removeLegend(); 
-        ChartPanel chartPanel = new ChartPanel(aChart); 
-        inferior.setLayout(new FlowLayout()); 
-        inferior.add(chartPanel); 
-        inferior.repaint(); // This method makes the new chart appear
-    }*/
+
+    /**
+     * Crida la funció llegeixDades() de la Classe Dades per obtenir les dades de la Menjadora.
+     * @param dreta booleà per escollir la Menjadora dreta o esquerra
+     */
     public void creaGrafica(boolean dreta){
         this.dreta=dreta;
         if(dreta){
@@ -148,37 +154,29 @@ public class Pantalla_Estadistiques extends JFrame{
         }
         initUI();
     }    
-        
+    
+    /**
+     * Crea el DataSet de la Menjadora que són les coordenades per a la gràfica 
+     * @return 
+     */
     private XYDataset createDatasetMenjadora() {
         var gramsRaccio1 = new XYSeries("Grams/Raccio");
         var limitDiari1 = new XYSeries("Limit Diari");
         var gramsAcumulatsAvui1 = new XYSeries("Grams Acumulats Avui");
         var sensorPlat1 = new XYSeries("Sensor Plat");
-        /*gramsRaccio1.clear();
-        limitDiari1.clear();
-        gramsAcumulatsAvui1.clear();        
-        sensorPlat1.clear();*/
                 
         try{
             for (int i=0; i<resultats;i++){
-
-                    gramsRaccio1.add(i,this.gramsRaccio[i]);
-
+                gramsRaccio1.add(i,this.gramsRaccio[i]);
             }
             for (int i=0; i<resultats;i++){
-
-                    limitDiari1.add(i,this.limitDiari[i]);
-                
+                limitDiari1.add(i,this.limitDiari[i]);               
             }
             for (int i=0; i<resultats;i++){
-
-                    gramsAcumulatsAvui1.add(i,this.gramsAcumulatsAvui[i]);
-                
+                gramsAcumulatsAvui1.add(i,this.gramsAcumulatsAvui[i]);              
             }
             for (int i=0; i<resultats;i++){
-
-                    sensorPlat1.add(i,this.sensorPlat[i]);
-                
+                sensorPlat1.add(i,this.sensorPlat[i]);    
             }
 
             var dataset = new XYSeriesCollection();
@@ -193,29 +191,25 @@ public class Pantalla_Estadistiques extends JFrame{
         return null;
     }
     
+    /**
+     * Crea el DataSet del Diposit que són les coordenades per a la gràfica
+     * @return 
+     */
     private XYDataset createDatasetDiposit() {
            
         var sensorNivell = new XYSeries("Sensor Nivell");
         var valorAlertaDiposit = new XYSeries("Valor Alerta Diposit");
         var valorDipositBuit = new XYSeries("Valor Diposit Buit");
-        /*sensorNivell.clear();
-        valorAlertaDiposit.clear();
-        valorDipositBuit.clear();    */
         
         try{     
             for (int i=0; i<resultats;i++){
-                    sensorNivell.add(i,this.sensorNivell[i]);
-                
+                sensorNivell.add(i,this.sensorNivell[i]);               
             }
             for (int i=0; i<resultats;i++){
-
-                    valorAlertaDiposit.add(i,this.valorAlertaDiposit[i]);
-                
+                valorAlertaDiposit.add(i,this.valorAlertaDiposit[i]);               
             }
             for (int i=0; i<resultats;i++){
-
-                    valorDipositBuit.add(i,this.valorDipositBuit[i]);
-                
+                valorDipositBuit.add(i,this.valorDipositBuit[i]);               
             }
       
         var dataset1 = new XYSeriesCollection();
@@ -230,6 +224,11 @@ public class Pantalla_Estadistiques extends JFrame{
         return null;
     }
     
+    /**
+     * Funció per triar el nom de la gràfica.
+     * Es posa a false quan ha escrit el nom "menjadora"
+     * @param menjadora booleà que defineix Menjadora o Diposit
+     */
     private void nomGrafica(boolean menjadora){
         if(menjadora){
             this.nomGrafica = "Menjadora";
@@ -238,7 +237,12 @@ public class Pantalla_Estadistiques extends JFrame{
         }
     }
     
-
+    /**
+     * Crea la gràfica a partir del DataSet.
+     * Li afegeix el nom, la llegenda, els colors, etc.
+     * @param dataset coordenades del punts de la gràfica
+     * @return gràfica (chart) renderitzada
+     */
     private JFreeChart createChart(XYDataset dataset) {
         JFreeChart chart= null;
         chart = ChartFactory.createXYLineChart(
@@ -274,12 +278,7 @@ public class Pantalla_Estadistiques extends JFrame{
         plot.setDomainGridlinePaint(Color.BLACK);
 
         chart.getLegend().setFrame(BlockBorder.NONE);
-        
-        //chart.setTitle(new TextTitle(nomGrafica,
-         //       new Font("Serif", java.awt.Font.BOLD, 18))
-        //);
 
         return chart;
     }
-    
 }
