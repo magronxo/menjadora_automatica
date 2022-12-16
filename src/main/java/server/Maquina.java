@@ -23,7 +23,8 @@ public class Maquina{
     private Controlador_Principal controlador;
     private Simulador simulador;
     
-    private static long initialTime;
+    //private static long initialTime;
+    private int horesExecucio;
     
     //CONSTRUCTORS
     /**
@@ -35,9 +36,8 @@ public class Maquina{
      * @param menjadoraEsquerra
      * @param dades una instància de Dades
      * @param controlador el Controlador que conté totes les Pantalles
-     * @param initialTime el temps d'inici de funcionament
      */
-    public Maquina(int id, Mascota mascotaDreta, Mascota mascotaEsquerra, Menjadora menjadoraDreta, Menjadora menjadoraEsquerra, Dades dades, Controlador_Principal controlador, long initialTime){
+    public Maquina(int id, Mascota mascotaDreta, Mascota mascotaEsquerra, Menjadora menjadoraDreta, Menjadora menjadoraEsquerra, Dades dades, Controlador_Principal controlador){
         this.id=id;
         this.mascotaDreta=mascotaDreta;
         this.mascotaEsquerra=mascotaEsquerra;
@@ -45,7 +45,7 @@ public class Maquina{
         this.menjadoraEsquerra=menjadoraEsquerra;
         this.dades=dades;
         this.controlador=controlador;
-        this.initialTime=initialTime;
+        this.horesExecucio=horesExecucio;
         this.simulador = new Simulador (this.menjadoraDreta,this.menjadoraEsquerra,this.menjadoraEsquerra.getSensorPlat().getValor(), this.menjadoraDreta.getSensorPlat().getValor(), this.menjadoraEsquerra.getDiposit().getSensorNivell().getValor(), this.menjadoraDreta.getDiposit().getSensorNivell().getValor());
     }
     public Maquina(){    
@@ -56,10 +56,9 @@ public class Maquina{
     /**
      * Afegeix una Maquina
      * @param id
-     * @param initialTime
      * @return una nova Maquina completa amb tots els seus objectes
      */
-    public static Maquina addMaquina(int id, long initialTime){
+    public static Maquina addMaquina(int id){
         
         Mascota mascotaDreta, mascotaEsquerra;
         Menjadora menjadoraDreta, menjadoraEsquerra;
@@ -80,17 +79,18 @@ public class Maquina{
         //Iniciem la Pantalla Principal
         controlador = new Controlador_Principal().addControlador(menjadoraDreta,menjadoraEsquerra,dades);
 
-        return new Maquina(id, mascotaDreta, mascotaEsquerra, menjadoraDreta, menjadoraEsquerra, dades, controlador, initialTime);
+        return new Maquina(id, mascotaDreta, mascotaEsquerra, menjadoraDreta, menjadoraEsquerra, dades, controlador);
     }
     
     /**
      * Per a cada execució del programa:
      * Crida el metode simula per a cada Menjadora i Mascota.
      * Escriu les dades de la Menjadora a Influx i també als arrays d'estadísitiques
+     * @param horesExecucio per al funcionament de la Simulacio
      */
-    public void funcionamentMaquina(){
-        menjadoraDreta.simulaFuncionament(initialTime);
-        menjadoraEsquerra.simulaFuncionament(initialTime);
+    public void funcionamentMaquina(int horesExecucio){
+        menjadoraDreta.simulaFuncionament(horesExecucio);
+        menjadoraEsquerra.simulaFuncionament(horesExecucio);
 
         simulador.setSensorPlat_dreta(menjadoraDreta.getSensorPlat().getValor());
         simulador.setSensorPlat_esquerra(menjadoraEsquerra.getSensorPlat().getValor());

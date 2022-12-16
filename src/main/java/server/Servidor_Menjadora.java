@@ -18,14 +18,14 @@ public class Servidor_Menjadora {
     private static int id = 1;
     private static boolean sortirPrograma = false;
     private static Maquina maquina;
-    private static double horesExecucio;
+    private static int horesExecucio;
     private static Simulador simulador;
     
-    private static long initialTime = System.currentTimeMillis();
+    //private static long initialTime = System.currentTimeMillis();
     private static int diesSimulats = 0;
     
     //VARIABLES DE SIMULACIO
-    private static int tempsEntreExecucions= 5; //Important! Definim el temps entre execucions del programa
+    private static int tempsEntreExecucions= 1; //Important! Definim el temps entre execucions del programa
 
 
     //CONSTRUCTORS
@@ -51,12 +51,12 @@ public class Servidor_Menjadora {
            
         ArrayList<Maquina> maquines = new ArrayList<Maquina>();
         maquina = new Maquina();
-        maquines.add(maquina.addMaquina(1, initialTime));
+        maquines.add(maquina.addMaquina(1));
         horesExecucio = 0;         
 
         while(!sortirPrograma){  
             for (Maquina maquina : maquines){
-                maquina.funcionamentMaquina();
+                maquina.funcionamentMaquina(horesExecucio);
                 maquina.getControlador().sumaDia(diesSimulats);
                 horesExecucio = horesExecucio + HORES_PER_EXECUCIO;
                 maquina.getControlador().escriuValorsGui();

@@ -1,10 +1,6 @@
 package server.machine.io;
 
-import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import server.Maquina;
-import server.Servidor_Menjadora;
 import server.machine.Menjadora;
 
 /**
@@ -27,12 +23,12 @@ public class Simulador{
     private Menjadora menjadoraDreta, menjadoraEsquerra;
     
     //VARIABLES DE SIMULACIO
-    private double ganaMascotaDreta= 1.5; //Gana de les Mascotes
+    private double ganaMascotaDreta= 1.5; //Gana de les Mascotes. 1 = es menja tota la raccio
     private double ganaMascotaEsquerra = 1.6; // Com més alt, menys mengen
 
     //CONSTRUCTORS
     /**
-     * Construeix el Simulador
+     * Construeix el Simulador amb les seves Menjadores, Mascotes i els valors dels Sensors
      */
     public Simulador(Menjadora menjadoraDreta,Menjadora menjadoraEsquerra,double sensorPlat_esq, double sensorPlat_dret, double sensorNivell_esq, double sensorNivell_dreta){
         this.sensorPlat_esquerra=sensorPlat_esq;
@@ -82,23 +78,7 @@ public class Simulador{
             this.sensorPlat_dreta = mascotaEsquerra.menja(this.sensorPlat_dreta);
         }    
     }
-    
-    public void simulaHuma(){
-        try {
-            TimeUnit.SECONDS.sleep(6);//Important! Definim el temps entre execucions del programa        
-            } catch (InterruptedException ex) {
-                Logger.getLogger(Servidor_Menjadora.class.getName()).log(Level.SEVERE, null, ex);
-            }
-    }
-    
-    /**
-     * Divideix el nombre de raccions entre 24 hores
-     * @param raccions 
-     */
-    public void reparteixRaccions(double raccions){
-        double tempsEntreRaccions = raccions / 24;   
-    }
-    
+
        //ACCESSORS
     public void setSensorPlat_esquerra(double sensorPlat_esquerra) {
         this.sensorPlat_esquerra = sensorPlat_esquerra;
@@ -155,9 +135,7 @@ public class Simulador{
             return sensorPlat_dreta;
         }
     }
-    
-    
-//////////////////////////////////////
+
     public SimuladorMascota getMascotaDreta() {
         return mascotaDreta;
     }
@@ -169,7 +147,8 @@ public class Simulador{
 }
 
 /**
- * Classe interna del Simulador
+ * Classe interna del Simulador.
+ * Simula la Mascota com menja
  * @author Oriol Coll Salvia
  */
 class SimuladorMascota{
@@ -178,6 +157,13 @@ class SimuladorMascota{
         private boolean dreta;
         private String nomMascota;
         
+        /**
+         * Constueix una Mascota de Simulació per a que menji
+         * @param quantitatMenjada
+         * @param tempsMenjada
+         * @param dreta
+         * @param nom 
+         */
         public SimuladorMascota(double quantitatMenjada, int tempsMenjada, boolean dreta, String nom){
             this.quantitatMenjada = quantitatMenjada;
             this.tempsMenjada = tempsMenjada;
@@ -217,8 +203,11 @@ class SimuladorMascota{
             this.nomMascota = nomMascota;
         }
         
-    
-        
+        /**
+         * Simula que la Mascota menja
+         * @param menjarPlat valor de grams de pinso que hi ha al plat
+         * @return 
+         */
         public double menja(double menjarPlat){
             if(menjarPlat > 0){
                 if(menjarPlat < quantitatMenjada){
@@ -232,22 +221,5 @@ class SimuladorMascota{
                 System.out.println("Plat buit, la mascota " + nomMascota +  " no ha menjat!");
             }
             return menjarPlat;
-        }
-        
+        } 
     }
-
-/**
- * Classe interna del Simulador
- * @author Oriol Coll Salvia
- */
-class SimuladorHuma{
-    
-    private int tempsReaccio;
-
-    public void carregaDiposit(Maquina maquina){
-            maquina.getMenjadoraDreta().getDiposit().getSensorNivell().setValorSimulador(50);
-            maquina.getMenjadoraEsquerra().getDiposit().getSensorNivell().setValorSimulador(50);
-            
-    }
-
-}

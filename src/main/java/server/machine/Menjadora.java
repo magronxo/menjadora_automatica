@@ -2,7 +2,6 @@ package server.machine;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.sql.Timestamp;
 import server.machine.io.Actuador;
 import server.machine.io.Sensor;
 
@@ -16,8 +15,6 @@ public class Menjadora {
     
     private static final int TIPUS_SENSOR = 1;
     private static final int KG_MARGE_PES = 1;
-    private static final double LIMIT_PES_PLAT = 2;
-    private static final int HORA_SEGONS = 1; ///Important! Aquí definim quants segons dura una hora a la simulació. Al programa final posar 3600. 1/HORES_PER_SEGON
 
     //VARIABLES
     private int limitRaccionsDia, percentatgeAvui, raccionsAcumuladesAvui;
@@ -29,15 +26,15 @@ public class Menjadora {
     private Actuador motorMenjadora;
     private Sensor sensorPlat;
     
-    private Timestamp horaUltimaRaccio;
-    private long initialTime;
+    private double horaUltimaRaccio;
     
     //VARIABLES DE SIMULACIO
-    private double ritmeBuidatgeDiposit = 0.05;
+    private static final double LIMIT_PES_PLAT = 2; //quan hi hagi menys de X grams al plat, la Menjadora podrà donar menjar
+    private double ritmeBuidatgeDiposit = 0.05; //Com més baix, més lentament s'abuidarà el Diposit
 
     //CONSTRUCTORS
     /**
-     * Construeix la Menjadora
+     * Construeix la Menjadora amb el seu Diposit, Motor, Sensor del plat i la Mascota assignada
      */
     public Menjadora(boolean dreta, Diposit diposit, Actuador motorMenjadora, Mascota mascota, Sensor sensorPlat){
         this.dreta=dreta;
@@ -46,9 +43,7 @@ public class Menjadora {
         this.sensorPlat=sensorPlat;
         this.raccionsAcumuladesAvui=0;
         this.mascota = mascota;
-        this.horaUltimaRaccio = new Timestamp(System.currentTimeMillis());
     }
-    
     public Menjadora(boolean dreta){
          this.dreta=dreta;
     }
@@ -80,7 +75,7 @@ public class Menjadora {
      */
     public void setDosisDiaria(boolean gat, int edat, double pes){
         limitDiari = 200;
-        limitRaccionsDia= 9;
+        limitRaccionsDia= 7;
         double pesNormal = 15;
         if(!gat){
             limitDiari = limitDiari *2;
@@ -116,7 +111,7 @@ public class Menjadora {
             
        }else{
             gramsRaccio = (double)limitDiari / limitRaccionsDia;
-            horesEntreRaccions = (double)24 / limitRaccionsDia;
+            horesEntreRaccions = (double)24/ limitRaccionsDia;
             gramsRaccio = new BigDecimal(gramsRaccio).setScale(2, RoundingMode.HALF_UP).doubleValue();
             horesEntreRaccions = new BigDecimal(horesEntreRaccions).setScale(2, RoundingMode.HALF_UP).doubleValue();    
        }
@@ -125,23 +120,26 @@ public class Menjadora {
 
     //                ------------  FUNCIONAMENT -----------
     /**
-     * 
-     * @param initialTime 
+     * Simula el funcionament de la Maquina Virtual.
+     * Va donant raccions fins que arriba al limitRaccionsDia.
+     * Dona una raccio de valor gramsRaccio cada horesEntreRaccions si el plat està per sota del LIMIT_PES_PLAT
+     * @param horesExecucio 
      */
-    public void simulaFuncionament(long initialTime){
+    public void simulaFuncionament(int horesExecucio){
+        //condicions per les quals activarem el procés de donar menjar
         if(this.raccionsAcumuladesAvui < this.limitRaccionsDia){
-            //condicions per les quals activarem el procés de donar menjar
             
-            Timestamp horaActual = new Timestamp(System.currentTimeMillis());
-            Timestamp horesEntreRaccionsTs = new Timestamp((long)(horesEntreRaccions * HORA_SEGONS * 1000));
-            long debugHrAct = horaActual.getTime();
-            long debugHrUltRacc = horaUltimaRaccio.getTime();
-            long debugHrEntreRacc = horesEntreRaccionsTs.getTime();
-            if(horaActual.getTime() - horaUltimaRaccio.getTime() >= horesEntreRaccionsTs.getTime()){
+            double horesExec = (double) horesExecucio; 
+                    
+            if(horaUltimaRaccio > horesExec){
+                horaUltimaRaccio = 0;
+            }
+            
+            if(horesExec - horaUltimaRaccio >= horesEntreRaccions){    
                 if(sensorPlat.getValor() < LIMIT_PES_PLAT){
                     activaMotor(sensorPlat.getValor(), this.gramsRaccio);
                     this.raccionsAcumuladesAvui++;
-                    this.horaUltimaRaccio = horaActual;
+                    this.horaUltimaRaccio = horesExec - (horesEntreRaccions / 2.5) ;
                     this.gramsAcumulatAvui+= gramsRaccio;
                     System.out.println("\nHem servit "+ raccionsAcumuladesAvui + " raccions a " + mascota.getNom());
                 }else{
@@ -193,7 +191,7 @@ public class Menjadora {
         }
         System.out.println("Hem carregat "+ gramsRaccio + " grams al plat de " + mascota.getNom());
         System.out.println("La capacitat del diposit és del "+ diposit.getPercentatgeDiposit() + "%");
-        System.out.println("El sensor del diposit està "+ diposit.getSensorNivell().getValor() + "cm. del pinso.Esta buit??" + diposit.estaBuit());
+        System.out.println("El sensor del diposit està "+ diposit.getSensorNivell().getValor() + "cm. del pinso. Esta buit?? " + diposit.estaBuit());
     }
 
     /**
